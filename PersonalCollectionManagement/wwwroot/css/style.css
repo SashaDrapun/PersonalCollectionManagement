@@ -1,0 +1,11 @@
+﻿.nav-item.userNickname {
+    display: none;
+}
+
+.nav-item.buttonContainer {
+    display: none;
+}
+
+textarea{
+    resize: none;
+}
