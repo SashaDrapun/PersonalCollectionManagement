@@ -32,6 +32,19 @@ namespace PersonalCollectionManagement.Models
 
                 return result;
             }
+            set
+            {
+                string result = "";
+                for (int i = 0; i < value.Count; i++)
+                {
+                    result += value[i];
+                    if(i != value.Count - 1)
+                    {
+                        result += ",";
+                    }
+                }
+                Values = result;
+            }
         }
 
         public int CollectionId { get; set; }

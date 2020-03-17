@@ -24,6 +24,9 @@ else
         </thead>
         <tbody>
 
+            @{ 
+                int i = 0;
+            }
             @foreach (var collection in Model)
             {
                 <tr>
@@ -32,22 +35,32 @@ else
                     <td>@collection.Theme</td>
                     <td>@collection.Image</td>
                     <td>
-                        <button class="btn btn-danger editCollection" 
+                        <button class="btn btn-danger editCollection"
                                 collectionId="@collection.Id"
                                 collectionFields="@collection.Fields"
                                 collectionName="@collection.Name"
                                 collectionDescription="@collection.Description"
+                                collectionCount="@ViewBag.Counts[i]"
                                 data-toggle="modal" data-target="#editCollection">
                             Редактировать
-                        </button></td>
+                        </button>
+                    </td>
                     <td>
-                    <button class="btn btn-danger deleteCollection" 
-                            collectionId="@collection.Id" 
-                            data-toggle="modal" data-target="#deleteCollection">
-                        Удалить
-                    </button></td>
-                    <td><button class="btn btn-primary" collectionId="@collection.Id">Перейти</button></td>
+                        <button class="btn btn-danger deleteCollection"
+                                collectionId="@collection.Id"
+                                data-toggle="modal" data-target="#deleteCollection">
+                            Удалить
+                        </button>
+                    </td>
+
+                    <td>
+                        <form asp-controller="Home" asp-action="Collection">
+                            <input name="idCollection" value="@collection.Id" class="d-none">
+                            <button class="btn btn-primary" collectionId="@collection.Id">Перейти</button>
+                        </form>
+                    </td>
                 </tr>
+                i++;
             }
         </tbody>
     </table>
@@ -91,7 +104,7 @@ else
 </div>
 
 <div class='modal fade' id='deleteCollection' tabindex="-1" role="dialog"
-     aria-labelledby="createCollection" aria-hidden="true">
+      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content text-white bg-dark">
             <div class="modal-header ">
@@ -120,7 +133,7 @@ else
         <div class="modal-content text-white bg-dark">
             <div class="modal-header ">
                 <h5 class="modal-title " id="ModalLabel">Изменение коллекции</h5>
-                <p class="text-info m-1">Измените данные коллекции и нажмите кнопку сохранить изменения</p>
+                <p class="text-info m-1">Полное редактирование коллекции доступно, только если в ней нет элементов</p>
                 <p class="text-danger">Измения полей в коллекции затронут все элементы коллекции</p>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

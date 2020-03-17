@@ -34,9 +34,17 @@ namespace PersonalCollectionManagement.Controllers
             }
             User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Nickname == nicknameAutorizeUser);
             List<Collection> collections = db.Collections.Where(x => x.UserId == ownerCollections.Id).ToList();
+
+            ViewBag.Counts = new List<int>();
+
+            for (int i = 0; i < collections.Count; i++)
+            {
+                ViewBag.Counts.Add(db.Items.Where(item=>item.CollectionId == collections[i].Id).Count());
+            }
             return View(collections);
         }
 
+        #region Collection
         [HttpPost]
         public async Task<IActionResult> CreateCollection(CollectionModel collectionModel)
         {
@@ -72,22 +80,67 @@ namespace PersonalCollectionManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCollection(CollectionModel collectionModel)
         {
-            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == collectionModel.IdCollection);
+            Collection oldCollection = await db.Collections.FirstOrDefaultAsync(x => x.Id == collectionModel.IdCollection);
 
-            collection.Name = collectionModel.NameCollection;
-            collection.Description = collectionModel.Description;
+            oldCollection.Name = collectionModel.NameCollection;
+            oldCollection.Description = collectionModel.Description;
 
-            List<Field> fields = new List<Field>();
-            for (int i = 0; i < collectionModel.NameField.Count; i++)
+            if(oldCollection.FormattedFields.Count != collectionModel.NameField.Count)
             {
-                fields.Add(new Field(collectionModel.NameField[i], collectionModel.TypeField[i]));
+                int countNewFields = collectionModel.TypeField.Count;
+                int index = oldCollection.FormattedFields.Count;
+
+                List<Field> fields = oldCollection.FormattedFields;
+                for (int i = 0; i < countNewFields; i++)
+                {
+                    fields.Add(new Field(collectionModel.NameField[index],
+                        collectionModel.TypeField[i]));
+                    index++;
+                }
+
+                oldCollection.FormattedFields = fields;
+
+                List<Item> items = db.Items.Where(x => x.CollectionId == oldCollection.Id).ToList();
+
+                for (int j = 0; j < items.Count; j++)
+                {
+                    for (int i = 0; i < countNewFields; i++)
+                    {
+                        items[j].Values += ",";
+                    }
+                    db.Items.Update(items[j]);
+                }
             }
 
-            collection.FormattedFields = fields;
-
-            db.Collections.Update(collection);
+            db.Collections.Update(oldCollection);
             await db.SaveChangesAsync();
             return RedirectToAction("PersonalArea");
         }
+
+        public async Task<IActionResult> Collection(int idCollection)
+        {
+            List<Item> items = db.Items.Where(item => item.CollectionId == idCollection).ToList();
+
+            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
+
+            if (items.Count == 0)
+            {
+                Item item = new Item
+                {
+                    CollectionId = collection.Id,
+                    Collection = collection,
+                    Id = 0
+                };
+
+                items.Add(item);
+            }
+            else
+            {
+                items[0].Collection = collection;
+            }
+            return View(items);
+        }
+        #endregion
+
     }
 }

@@ -1,0 +1,265 @@
+﻿@{
+    @model List<PersonalCollectionManagement.Models.Item>
+    ViewData["Title"] = "Коллекция " + Model[0].Collection.Name;
+}
+
+@if (Model.Count == 1 && Model[0].Id == 0)
+{
+    <p class="text-danger m-2">В коллекции пока нет элементов</p>
+}
+else
+{
+    <p class="text-danger m-2">Список элементов коллекции:</p>
+    <table class="table table-dark .table-responsive">
+        <thead>
+            <tr>
+                <th scope="col">Название элемента</th>
+                @foreach (var item in Model[0].Collection.FormattedFields)
+                {
+                    <th scope="col">@item.Name</th>
+
+                }
+
+                <th scope="col">Редактировать</th>
+                <th scope="col">Удалить</th>
+                <th scope="col">Перейти</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.Name</th>
+
+                    @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                    {
+                        var field = Model[0].Collection.FormattedFields[i];
+
+                        @if (field.Type == "Числовой")
+                        {
+                            <th scope="row"><input type="number" readonly value="@item.FormattedValues[i]"></th>
+                        }
+
+                        @if (field.Type == "Строковый")
+                        {
+                            <th scope="row"><input type="text" readonly value="@item.FormattedValues[i]"></th>
+                        }
+
+                        @if (field.Type == "Текстовый")
+                        {
+                            <th scope="row"><textarea readonly>@item.FormattedValues[i]</textarea></th>
+                        }
+
+                        @if (field.Type == "Дата")
+                        {
+                            <th scope="row"><input type="datetime" readonly value="@item.FormattedValues[i]"></th>
+                        }
+
+                        @if (field.Type == "Логический")
+                        {
+                            @if (@item.FormattedValues[i] == "on")
+                            {
+                                <th scope="row"><input type="checkbox" disabled checked></th>
+                            }
+                            else
+                            {
+                                <th scope="row"><input type="checkbox" disabled></th>
+                            }
+                        }
+                    }
+
+                    <td>
+                        <button class="btn btn-danger editItem"
+                                idItem="@item.Id"
+                                valuesItem="@item.Values"
+                                nameItem="@item.Name"
+                                data-toggle="modal" data-target="#editItem">
+                            Редактировать
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger deleteItem"
+                                idItem="@item.Id"
+                                data-toggle="modal" data-target="#deleteItem">
+                            Удалить
+                        </button>
+                    </td>
+
+                    <td>
+                        <form asp-controller="Home" asp-action="Collection">
+                            @*<input name="idCollection" value="@collection.Id" class="d-none">*@
+                            <button class="btn btn-primary">Перейти</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class='modal fade' id='createItem' tabindex="-1" role="dialog"
+     aria-labelledby="createCollection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-white bg-dark">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="ModalLabel">Создание элемента</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form name="loginForm" method="post">
+                        <input name="idCollection" value="@Model[0].Collection.Id" class="d-none">
+                        <div class="form-group">
+                            <label for="nameCollection">Название элемента</label>
+                            <input type="text" name="itemName" class="form-control"
+                                   placeholder="Название" aria-describedby="emailHelp">
+                        </div>
+                        <p>Заполните поля</p>
+                        @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                        {
+                            var field = Model[0].Collection.FormattedFields[i];
+
+                            <label>@field.Name</label>
+                            <div class="form-group">
+
+                                @if (field.Type == "Числовой")
+                                {
+                                    <input type="number" name="itemValue">
+                                }
+
+                                @if (field.Type == "Строковый")
+                                {
+                                    <input type="text" name="itemValue">
+                                }
+
+                                @if (field.Type == "Текстовый")
+                                {
+                                    <textarea name="itemValue"></textarea>
+                                }
+
+                                @if (field.Type == "Дата")
+                                {
+                                    <input type="date" name="itemValue">
+                                }
+
+                                @if (field.Type == "Логический")
+                                {
+                                    <input class="d-none" type="text" name="itemValue" value="off">
+                                    <input type="checkbox">
+                                }
+
+                            </div>
+                        }
+
+                        <button asp-controller="Collection" asp-action="CreateItem"
+                                class="btn btn-primary m-2">
+                            Сохранить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='modal fade' id='deleteItem' tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-white bg-dark">
+            <div class="modal-header ">
+                <h5 class="modal-title text-danger">Удаление элемента</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Вы уверены, что хотите удалить элемент?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form asp-controller="Collection" asp-action="DeleteItem" method="post">
+                    <input name="idItem" id="idItemDelete" class="d-none">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='modal fade' id='editItem' tabindex="-1" role="dialog"
+     aria-labelledby="createCollection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-white bg-dark">
+            <div class="modal-header ">
+                <h5 class="modal-title" id="ModalLabel">Редактирование элемента</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form asp-controller="Collection" asp-action="EditItem" method="post">
+                        <input name="idCollection" value="@Model[0].Collection.Id" class="d-none">
+                        <div class="form-group">
+                            <label for="nameCollection">Название элемента</label>
+                            <input type="text" name="itemName" id="itemName" class="form-control"
+                                   placeholder="Название" aria-describedby="emailHelp">
+                        </div>
+                        <p class="text-info">Отредактируйте данные и нажмите кнопку сохранить изменения</p>
+                        @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                        {
+                            var field = Model[0].Collection.FormattedFields[i];
+
+                            <label>@field.Name</label>
+                            <div class="form-group inputContainer">
+
+                                @if (field.Type == "Числовой")
+                                {
+                                    <input type="number" name="itemValue">
+                                }
+
+                                @if (field.Type == "Строковый")
+                                {
+                                    <input type="text" name="itemValue">
+                                }
+
+                                @if (field.Type == "Текстовый")
+                                {
+                                    <textarea name="itemValue"></textarea>
+                                }
+
+                                @if (field.Type == "Дата")
+                                {
+                                    <input type="date" name="itemValue">
+                                }
+
+                                @if (field.Type == "Логический")
+                                {
+                                    <input class="d-none" type="text" name="itemValue" value="off">
+                                    <input type="checkbox">
+                                }
+                            </div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+
+                            <input name="IdItem" id="idItemEdit" class="d-none">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">Добавить элемент</button>
+<script src="~/js/Collection.js"></script>
+
+

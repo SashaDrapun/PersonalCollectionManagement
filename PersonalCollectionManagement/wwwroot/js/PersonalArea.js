@@ -28,7 +28,7 @@ function onCreateFieldClick(e) {
     }
 }
 
-function createField(node,nameField, typeField) {
+function createField(node,nameField, typeField,fullEdit) {
         const field = document.createElement('div');
         field.className = 'fieldContainer';
             field.innerHTML = `<div class="row">
@@ -39,7 +39,9 @@ function createField(node,nameField, typeField) {
                                         <label>Тип поля</label>
                                     </div>
                                     <div class="col-4">
-                                        <button class="btn btn-danger delete-field" onclick="deleteField(event)">Удалить поле</button>
+                                        <button class="btn btn-danger delete-field 
+                                        ${fullEdit == false ? 'd-none' : ''}"
+                                        onclick="deleteField(event)">Удалить поле</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -48,7 +50,7 @@ function createField(node,nameField, typeField) {
                                                value="${nameField !== undefined ? nameField:''}" placeholder="Название">
                                     </div>
                                     <div class="col-4">
-                                        <select name="typeField">
+                                        <select name="typeField" ${fullEdit == false ? 'disabled' : ''}>
                                             <option ${typeField === 'Числовой' ? 'selected' :''}>Числовой</option>
                                             <option ${typeField === 'Строковый' ? 'selected' : ''}>Строковый</option>
                                             <option ${typeField === 'Текстовый' ? 'selected' : ''}>Текстовый</option>
@@ -95,9 +97,16 @@ for (let i = 0; i < buttonsEdit.length; i++) {
         document.querySelector('#nameCollectionEdit').value = e.target.getAttribute("collectionName");
         document.querySelector('#descriptionEdit').value = e.target.getAttribute("collectionDescription");
 
+        let countItemsInCollection = e.target.getAttribute("collectionCount");
+        console.log(countItemsInCollection);
+        fullEdit = true;
+        if (countItemsInCollection != 0) {
+            fullEdit = false;
+        }
+        
         for (let i = 0; i < fields.length; i++) {
             let field = fields[i].split(',');
-            createField(buttonCreateFieldEdit, field[0], field[1]);
+            createField(buttonCreateFieldEdit, field[0], field[1], fullEdit);
         }
     });
 }
