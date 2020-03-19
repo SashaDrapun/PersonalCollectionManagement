@@ -86,30 +86,30 @@ for (let i = 0; i < buttonsEdit.length; i++) {
 
         const buttonCreateFieldEdit = document.querySelector('#createFieldEdit');
 
-        for (let i = 0; i < buttonCreateFieldEdit.parentNode.childNodes.length; i++) {
-            const childNode = buttonCreateFieldEdit.parentNode.childNodes[i];
-            if (childNode.classList !== undefined && childNode.classList.contains('fieldContainer')) {
-                childNode.remove();
-                i--;
+            for (let i = 0; i < buttonCreateFieldEdit.parentNode.childNodes.length; i++) {
+                const childNode = buttonCreateFieldEdit.parentNode.childNodes[i];
+                if (childNode.classList !== undefined && childNode.classList.contains('fieldContainer')) {
+                    childNode.remove();
+                    i--;
+                }
             }
-        }
 
         document.querySelector('#nameCollectionEdit').value = e.target.getAttribute("collectionName");
         document.querySelector('#descriptionEdit').value = e.target.getAttribute("collectionDescription");
 
-        let countItemsInCollection = e.target.getAttribute("collectionCount");
-        console.log(countItemsInCollection);
+        let countItemsInCollection = fields.length
         fullEdit = true;
         if (countItemsInCollection != 0) {
             fullEdit = false;
         }
-        
-        for (let i = 0; i < fields.length; i++) {
-            let field = fields[i].split(',');
-            createField(buttonCreateFieldEdit, field[0], field[1], fullEdit);
+
+        if (fields != "") {
+            
+            for (let i = 0; i < fields.length; i++) {
+                let field = fields[i].split(',');
+                createField(buttonCreateFieldEdit, field[0], field[1], fullEdit);
+            }
         }
+        
     });
 }
-
-const nicknameUser = document.querySelector("#nicknameUser");
-nicknameUser.value = getCookie("NicknameAutorizeUser");

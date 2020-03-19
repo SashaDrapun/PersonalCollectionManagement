@@ -9,8 +9,7 @@ using PersonalCollectionManagement.ViewModels;
 
 namespace PersonalCollectionManagement.Controllers
 {
-    [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         ApplicationContext db;
         public AccountController(ApplicationContext applicationContext)
@@ -19,55 +18,78 @@ namespace PersonalCollectionManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> Get()
+        public IActionResult Register()
         {
-            return await db.Users.ToListAsync();
+            return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post([FromBody]RegisterModel model)
+        public async Task<IActionResult> Register(RegisterModel model)
         {
             User userFromDatabaseByEmail = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             User userFromDatabaseByNickname = await db.Users.FirstOrDefaultAsync(u => u.Nickname == model.Nickname);
-
+            bool isAllValid = true;
+            
             if (userFromDatabaseByEmail != null)
             {
-                ModelState.AddModelError("email", "Пользователь с такой почтой уже существует");
-                return BadRequest(ModelState);
+                ViewBag.EmailMessage = "Пользователь с такой почтой уже существует";
+                isAllValid = false;
             }
             if (userFromDatabaseByNickname != null)
             {
-                ModelState.AddModelError("nickname", "Пользователь с таким никнеймом уже существует");
-                return BadRequest(ModelState);
+                ViewBag.NicknameMessage = "Пользователь с таким никнеймом уже существует";
+                isAllValid = false;
             }
-            User user = new User(model.Nickname, model.Email, model.Password)
+            if (isAllValid)
             {
-                DateRegistration = DateTime.Now,
-                DateLastLogin = DateTime.Now
-            };
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-            HttpContext.Response.Cookies.Append("NicknameAutorizeUser", user.Nickname);
-            return Ok();
+                User user = new User(model.Nickname, model.Email, model.Password)
+                {
+                    DateRegistration = DateTime.Now,
+                    DateLastLogin = DateTime.Now
+                };
+                db.Users.Add(user);
+                await db.SaveChangesAsync();
+                HttpContext.Response.Cookies.Append("NicknameAutorizeUser", user.Nickname);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<User>> Put([FromBody]LoginModel model)
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginModel model)
         {
             User userFromDatabase = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            bool isAllValid = true;
 
-            if(userFromDatabase == null)
+            if (userFromDatabase == null)
             {
-                ModelState.AddModelError("email", "Пользователя с такой почтой не существует");
-                return BadRequest(ModelState);
+                ViewBag.EmailMessage = "Пользователя с такой почтой не существует";
+                isAllValid = false;
             }
-            if(userFromDatabase.Password != model.Password)
+            else if (userFromDatabase.Password != model.Password)
             {
-                ModelState.AddModelError("password", "Пароль введен неверно");
-                return BadRequest(ModelState);
+                ViewBag.PasswordMessage =  "Пароль введен неверно";
+                isAllValid = false;
             }
-            HttpContext.Response.Cookies.Append("NicknameAutorizeUser", userFromDatabase.Nickname);
-            return Ok();
-        }
+            if (isAllValid)
+            {
+                userFromDatabase.DateLastLogin = DateTime.Now;
+
+                await db.SaveChangesAsync();
+                HttpContext.Response.Cookies.Append("NicknameAutorizeUser", userFromDatabase.Nickname);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View();
+        }    
     }
 }

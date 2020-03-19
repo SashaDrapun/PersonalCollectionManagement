@@ -1,0 +1,124 @@
+﻿@{
+    @model List<PersonalCollectionManagement.Models.User>
+    ViewData["Title"] = "Пользователи";
+}
+
+<table class="table table-dark .table-responsive">
+    <thead>
+        <tr>
+            <th scope="col">Никнейм</th>
+            <th scope="col">Дата регистрации</th>
+            <th scope="col">Дата последнего входа</th>
+            @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.IsAdmin)
+            {
+                <th scope="col">Заблокировать/Разблокировать</th>
+                <th scope="col">Удалить</th>
+                <th scope="col">Назначить администратором</th>
+            }
+            <th scope="col">Перейти</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr class="bg-success">
+                <th scope="row" >@user.Nickname</th>
+                <td>@user.DateRegistration</td>
+                <td>@user.DateLastLogin</td>
+
+                @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.IsAdmin)
+                {
+                    <td>
+                        <form asp-controller="Users" asp-action="ChangeStatus" asp-route-idUser="@user.Id">
+                            <button class="btn btn-danger">
+                                @(user.Status == "Разблокирован" ? "Заблокировать" : "Разблокировать")
+                            </button>
+                        </form>
+                    </td>
+
+                    @if (!user.IsAdmin)
+                    {
+                        <td>
+                            <button class="btn btn-danger deleteUser"
+                                    idUser="@user.Id"
+                                    data-toggle="modal" data-target="#deleteUser">
+                                Удалить
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger setAdmin"
+                                    idUser="@user.Id"
+                                    data-toggle="modal" data-target="#setAdmin">
+                                Назначить администратором
+                            </button>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <p class="text-info">Админ</p>
+                        </td>
+                        <td>
+                            <p class="text-info">Админ</p>
+                        </td>
+                    }
+                }
+
+                <td>
+                    <form asp-controller="Home" asp-action="UserPage" asp-route-nicknameUser="@user.Nickname">
+                        <button class="btn btn-primary">
+                            Перейти
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class='modal fade' id='deleteUser' tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-white bg-dark">
+            <div class="modal-header ">
+                <h5 class="modal-title text-danger">Удаление пользователя</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Вы уверены, что хотите удалить пользователя?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form id="deleteUserForm" method="post">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='modal fade' id='setAdmin' tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-white bg-dark">
+            <div class="modal-header ">
+                <h5 class="modal-title text-danger">Назначение администратора</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Вы уверены, что хотите сделать пользователя администратором?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form id="setAdminForm" method="post">
+                    <button type="submit" class="btn btn-primary">Назначить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/Users.js"></script>

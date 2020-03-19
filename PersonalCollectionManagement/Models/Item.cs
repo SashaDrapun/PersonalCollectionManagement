@@ -35,14 +35,18 @@ namespace PersonalCollectionManagement.Models
             set
             {
                 string result = "";
-                for (int i = 0; i < value.Count; i++)
+                if(value != null)
                 {
-                    result += value[i];
-                    if(i != value.Count - 1)
+                    for (int i = 0; i < value.Count; i++)
                     {
-                        result += ",";
+                        result += value[i];
+                        if (i != value.Count - 1)
+                        {
+                            result += ",";
+                        }
                     }
                 }
+               
                 Values = result;
             }
         }
