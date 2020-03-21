@@ -140,3 +140,4 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Collections.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Users.cshtml.g.cs
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Item.cshtml.g.cs

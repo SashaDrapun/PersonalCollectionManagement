@@ -1,12 +1,20 @@
 ﻿@{
     @model List<PersonalCollectionManagement.Models.Collection>
-    @if (ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname)
+    @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname)
     {
         ViewData["Title"] = "Моя страница";
     }
     else
     {
         ViewData["Title"] = "Страница пользователя " + ViewBag.OwnerCollections.Nickname;
+    }
+
+    ViewBag.FullAccess = false;
+    @if(ViewBag.AutorizeUser != null)
+    {
+        if((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin){
+            ViewBag.FullAccess = true;
+        }
     }
 }
 
@@ -24,7 +32,7 @@ else
                 <th scope="col">Описание коллекции</th>
                 <th scope="col">Тема</th>
                 <th scope="col">Картинка</th>
-                @if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+                @if(ViewBag.FullAccess)
                 {
                     <th scope="col">Редактировать</th>
                     <th scope="col">Удалить</th>
@@ -45,7 +53,7 @@ else
                     <td>@collection.Description</td>
                     <td>@collection.Theme</td>
                     <td>@collection.Image</td>
-                    @if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+                    @if(ViewBag.FullAccess)
                     {
                         <td>
                             <button class="btn btn-danger editCollection"
@@ -180,9 +188,8 @@ else
     </div>
 </div>
 
-@if((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
-{
-    <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createCollection">Создать коллекцию</button>
+@if (ViewBag.FullAccess){
+        <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createCollection">Создать коллекцию</button>
 }
 
 <script src="~/js/UserPage.js"></script>

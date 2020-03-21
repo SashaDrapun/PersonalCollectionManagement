@@ -167,13 +167,41 @@ namespace PersonalCollectionManagement.Controllers
 
             return View(users);
         }
+        public async Task<IActionResult> Item(int id)
+        {
+            User autorizeUser = await GetAutorizeUser();
+            ViewBag.AutorizeUser = autorizeUser;
+
+            Item item = await db.Items.FirstOrDefaultAsync(x => x.Id == id);
+            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == item.CollectionId);
+            ViewBag.Comments = db.Comments.Where(x => x.ItemId == id).OrderByDescending(x=>x.DateTime).ToList();
+
+            for (int i = 0; i < ViewBag.Comments.Count; i++)
+            {
+                int userId = ViewBag.Comments[i].UserId;
+                User user = await db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                ViewBag.Comments[i].User = user;
+            }
+
+
+            List<Like> likes = db.Likes.Where(x => x.ItemId == id).ToList();
+
+            ViewBag.CountLikes = likes.Count;
+
+            ViewBag.IsUserLike = autorizeUser == null ? false :
+                likes.FirstOrDefault(x => x.UserId == autorizeUser.Id) == null ? false : true;
+
+            item.Collection = collection;
+            return View(item);
+        }
 
         [NonAction]
         public async Task<User> GetAutorizeUser()
         {
             string nicknameAutorizeUser = HttpContext.Request.Cookies["NicknameAutorizeUser"];
             return await db.Users.FirstOrDefaultAsync(u => u.Nickname == nicknameAutorizeUser);
-           
         }
+
+        
     }
 }

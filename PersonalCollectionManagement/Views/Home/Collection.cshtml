@@ -88,8 +88,7 @@ else
                     </td>
 
                     <td>
-                        <form asp-controller="Home" asp-action="Collection">
-                            @*<input name="idCollection" value="@collection.Id" class="d-none">*@
+                        <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
                             <button class="btn btn-primary">Перейти</button>
                         </form>
                     </td>

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PersonalCollectionManagement.Models;
+using SignalRApp;
 
 namespace PersonalCollectionManagement
 {
@@ -26,14 +27,10 @@ namespace PersonalCollectionManagement
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            // добавляем контекст MobileContext в качестве сервиса в приложение
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie(options => //CookieAuthenticationOptions
-            //    {
-            //        options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            //    });
             services.AddControllersWithViews();
+            services.AddSignalR();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +54,8 @@ namespace PersonalCollectionManagement
             app.UseAuthentication();
             app.UseAuthorization();
 
+            
+
 
             app.UseEndpoints(endpoints =>
             {
@@ -64,6 +63,7 @@ namespace PersonalCollectionManagement
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
+                endpoints.MapHub<ItemHub>("/item");
             });
         }
     }

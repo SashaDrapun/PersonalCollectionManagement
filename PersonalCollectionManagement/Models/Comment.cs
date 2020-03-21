@@ -17,9 +17,9 @@ namespace PersonalCollectionManagement.Models
         [ForeignKey("User")]
         public int UserId { get; set; }
 
+        public User User { get; set; }
+
         [ForeignKey("Item")]
         public int ItemId { get; set; }
-
-        public Item Item { get; set; }
     }
 }
