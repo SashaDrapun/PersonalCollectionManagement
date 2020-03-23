@@ -12,10 +12,11 @@ namespace PersonalCollectionManagement.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string Values { get; set; }
+
+        public string Tegs { get; set; }
 
         [NotMapped]
         public List<string> FormattedValues
@@ -45,9 +46,28 @@ namespace PersonalCollectionManagement.Models
                             result += ",";
                         }
                     }
+                   
                 }
                
                 Values = result;
+            }
+        }
+
+        [NotMapped]
+        public List<string> FormattedTegs
+        {
+            get
+            {
+                List<string> result = new List<string>();
+
+                string[] tegs = Tegs.Split(new char[] { '#' });
+
+                for (int i = 1; i < tegs.Length; i++)
+                {
+                    result.Add(tegs[i]);
+                }
+
+                return result;
             }
         }
 

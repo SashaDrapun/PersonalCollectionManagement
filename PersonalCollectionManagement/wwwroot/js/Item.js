@@ -26,6 +26,8 @@ async function CreateLike(nickname, idItem) {
         containerCountLikes.textContent = ++countLikes;
         document.querySelector('.like').src = '/img/LikePressed.png';
         document.querySelector('#isUserLike').textContent = 'True';
+        const itemId = parseInt(document.querySelector('#idItem').textContent);
+        hubConnection.invoke("SendLike", itemId, countLikes);
     }
 }
 
@@ -41,8 +43,6 @@ async function AddComment(nickname, idItem, text) {
     });
     if (response.ok === true) {
         const comment = await response.json();
-        document.querySelector('#countComments').textContent = ++countComments;
-        console.log(comment.dateTime);
         hubConnection.invoke("Send", comment.text, comment.user.nickname, comment.itemId, comment.dateTime);
     }
 }
@@ -56,6 +56,8 @@ async function DeleteLike(nickname) {
         containerCountLikes.textContent = --countLikes;
         document.querySelector('.like').src = '/img/Like.png';
         document.querySelector('#isUserLike').textContent = 'False';
+        const itemId = parseInt(document.querySelector('#idItem').textContent);
+        hubConnection.invoke("SendLike", itemId, countLikes);
     }
 }
 
@@ -91,6 +93,7 @@ document.forms["commentForm"].addEventListener("submit", e => {
 
 hubConnection.on('Send', function (message, userNickname, idItem, dateTime) {
     if (idItem == document.querySelector('#idItem').textContent) {
+        document.querySelector('#countComments').textContent = ++countComments;
         const comment = document.createElement('div');
         comment.innerHTML = `<div class="modal-dialog" role="document">
         <div class="modal-content text-white bg-dark">
@@ -107,6 +110,14 @@ hubConnection.on('Send', function (message, userNickname, idItem, dateTime) {
     </div>`;
         document.querySelector('#formCommentModal').appendChild(comment);
     }   
+});
+
+
+hubConnection.on('SendLike', function (idItem, countLikesNew) {
+    if (idItem == document.querySelector('#idItem').textContent) {
+        countLikes = countLikesNew;
+        document.querySelector('#countLikes').textContent = countLikes;
+    }
 });
 
 hubConnection.start();

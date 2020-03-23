@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[3.1.2, )"
             },
+            "Microsoft.SqlServer.DacFx.x64": {
+              "target": "Package",
+              "version": "[150.4573.2, )"
+            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.1, )"

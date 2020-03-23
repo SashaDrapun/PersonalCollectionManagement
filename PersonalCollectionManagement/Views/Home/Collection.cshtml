@@ -3,6 +3,12 @@
     ViewData["Title"] = "Коллекция " + Model[0].Collection.Name;
 }
 
+<link rel="stylesheet" href="~/css/jquery-ui.css">
+<link rel="stylesheet" href="~/css/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="~/css/jquery-ui.theme.css">
+<script src="~/js/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @if (Model.Count == 1 && Model[0].Id == 0)
 {
     <p class="text-danger m-2">В коллекции пока нет элементов</p>
@@ -14,10 +20,10 @@ else
         <thead>
             <tr>
                 <th scope="col">Название элемента</th>
+                <th scope="col">#Теги</th>
                 @foreach (var item in Model[0].Collection.FormattedFields)
                 {
                     <th scope="col">@item.Name</th>
-
                 }
 
                 <th scope="col">Редактировать</th>
@@ -27,11 +33,11 @@ else
             </tr>
         </thead>
         <tbody>
-
             @foreach (var item in Model)
             {
                 <tr>
                     <th scope="row">@item.Name</th>
+                    <th scope="row">@item.Tegs</th>
 
                     @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                     {
@@ -114,10 +120,20 @@ else
                         <input name="idCollection" value="@Model[0].Collection.Id" class="d-none">
                         <div class="form-group">
                             <label for="nameCollection">Название элемента</label>
-                            <input type="text" name="itemName" class="form-control"
-                                   placeholder="Название" aria-describedby="emailHelp">
+                            <input type="text" name="itemName" class="form-control" placeholder="Название">
                         </div>
-                        <p>Заполните поля</p>
+
+                        <p>Добавьте #</p>
+                        <p>Ваши #</p>
+                        <input type="text" name="tegs" id="allTegs" class="form-control" readonly>
+                        <p>Добавить #</p>
+                        <input type="text" class="form-control" id="oneTag" placeholder="Введите ваш #">
+                        <button id="addTeg" class="btn btn-primary mt-2">Добавить</button>
+                        @if (Model[0].Collection.FormattedFields.Count != 0)
+                        {
+                            <p>Заполните поля</p>
+                        }
+
                         @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                         {
                             var field = Model[0].Collection.FormattedFields[i];

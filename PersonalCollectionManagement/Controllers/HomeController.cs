@@ -23,6 +23,8 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
+            //string criteria = "%мяч%";
+            //var items = db.Items.Where(x => EF.Functions.Like(x.Name, criteria)).ToList();
             return View();
         }
 
@@ -136,7 +138,7 @@ namespace PersonalCollectionManagement.Controllers
 
         public async Task<IActionResult> Collection(int idCollection)
         {
-            List<Item> items = db.Items.Where(item => item.CollectionId == idCollection).ToList();
+            List<Item> items = db.Items.Where(x => x.CollectionId == idCollection).ToList();
 
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
 

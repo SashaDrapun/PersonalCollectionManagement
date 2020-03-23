@@ -26,7 +26,8 @@ namespace PersonalCollectionManagement.Controllers
             {
                 CollectionId = itemModel.IdCollection,
                 Name = itemModel.ItemName,
-                FormattedValues = itemModel.ItemValue
+                FormattedValues = itemModel.ItemValue,
+                Tegs = itemModel.Tegs
             };
 
             db.Items.Add(item);

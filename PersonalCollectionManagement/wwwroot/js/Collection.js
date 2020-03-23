@@ -37,3 +37,25 @@ for (let i = 0; i < buttonsEditItem.length; i++) {
         }
     });
 }
+
+document.querySelector('#addTeg').addEventListener('click', e => {
+    e.preventDefault();
+    let textAllTegs = document.querySelector('#allTegs').value;
+    textAllTegs += '#' + document.querySelector('#oneTag').value;
+    document.querySelector('#oneTag').value = "";
+    document.querySelector('#allTegs').value = textAllTegs;
+});
+
+var availableTags = [
+    "Испанский",
+    "Итальянский",
+    "Английский",
+    "Китайский",
+    "Русский"
+];
+
+    $('#oneTag').autocomplete({
+        source: '/api/tegs/search',
+        appendTo: document.querySelector('#createItem')
+    });
+
