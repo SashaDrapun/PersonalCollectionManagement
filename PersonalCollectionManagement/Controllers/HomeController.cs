@@ -23,14 +23,13 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
-            //string criteria = "%мяч%";
-            //var items = db.Items.Where(x => EF.Functions.Like(x.Name, criteria)).ToList();
+            
             return View();
         }
 
-        public async Task<IActionResult> UserPage(string nicknameUser)
+        public async Task<IActionResult> UserPage(int idUser)
         {   
-            User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Nickname == nicknameUser);
+            User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
             
             List<Collection> collections = db.Collections.Where(x => x.UserId == ownerCollections.Id).ToList();
 
@@ -195,6 +194,64 @@ namespace PersonalCollectionManagement.Controllers
 
             item.Collection = collection;
             return View(item);
+        }
+
+        public async Task<IActionResult> Items(string searchText)
+        {
+            ViewBag.AutorizeUser = await GetAutorizeUser();
+            searchText = "%"+searchText+"%";
+
+            List<Item> items = db.Items.ToList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == items[i].CollectionId);
+                items[i].Collection = collection;
+            }
+
+            Task<List<int>>[] tasks = new Task<List<int>>[5]
+            {
+                new Task<List<int>>(() =>
+                {
+                return items.Where(x => EF.Functions.Like(x.Name, searchText)).Select(item => item.Id).ToList();
+                }),
+                new Task<List<int>>(() =>
+                {
+                return items.Where(x => EF.Functions.Like(x.Tegs, searchText)).Select(item => item.Id).ToList();
+                }),
+                new Task<List<int>>(() =>
+                {
+                    return items.Where(x => EF.Functions.Like(x.Values, searchText)).Select(item => item.Id).ToList();
+                }),
+
+                new Task<List<int>>(() =>
+                {
+                    return items.Where(x => EF.Functions.Like(x.Collection.Description, searchText)).Select(item => item.Id).ToList();
+                }),
+
+                new Task<List<int>>(() =>
+                {
+                    return db.Comments.Where(x => EF.Functions.Like(x.Text, searchText)).Select(comment => comment.ItemId).ToList();
+                })
+            };
+
+            foreach (var t in tasks)
+            {
+                t.Start();
+            }
+                      
+
+            Task.WaitAll(tasks);
+
+            List<int> allSearchedItemsId = tasks[0].Result.
+                 Union(tasks[1].Result.
+                 Union(tasks[2].Result.
+                 Union(tasks[3].Result.
+                 Union(tasks[4].Result)))).ToList();
+
+            List<Item> allSearchedItems = items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
+
+            return View(allSearchedItems);
         }
 
         [NonAction]

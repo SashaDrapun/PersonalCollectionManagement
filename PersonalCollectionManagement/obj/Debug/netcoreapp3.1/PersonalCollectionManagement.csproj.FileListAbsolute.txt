@@ -197,3 +197,4 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\zh-TW\Microsoft.SqlServer.Dac.resources.dll
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\zh-TW\Microsoft.SqlServer.TransactSql.ScriptDom.resources.dll
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Items.cshtml.g.cs
