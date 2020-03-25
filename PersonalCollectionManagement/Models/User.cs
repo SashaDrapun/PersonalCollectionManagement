@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,25 +8,18 @@ using System.Threading.Tasks;
 
 namespace PersonalCollectionManagement.Models
 {
-    public class User
+    public class User : IdentityUser
     {
-        public User(string nickname, string email, string password)
+        public User(string nickname, string email)
         {
             Nickname = nickname;
             Email = email;
-            Password = password;
             this.IsAdmin = false;
             this.Status = "Разблокирован";
         }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+
         public bool IsAdmin { get; set; }
         public string Nickname { get; set; }
-
-        public string Email { get; set; }
-
-        public string Password { get; set; }
 
         public string Status { get; set; }
 

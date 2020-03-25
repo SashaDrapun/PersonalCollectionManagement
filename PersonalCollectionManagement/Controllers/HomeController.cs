@@ -23,11 +23,36 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
-            
+
+            ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Collection).Take(5).ToList();
+
+            List<Collection> collections = db.Collections.ToList();
+
+            for (int i = 0; i < collections.Count; i++)
+            {
+                collections[i].CountItems = db.Items.
+                    Where(item => item.CollectionId == collections[i].Id).
+                    Count();
+            }
+
+            ViewBag.CollectionsWithMostOfItems = collections.OrderByDescending(x=>x.CountItems).Take(5);
+
+            List<string> allTegs = new List<string>();
+
+            foreach(var item in db.Items)
+            {
+                foreach(var teg in item.FormattedTegs)
+                {
+                    allTegs.Add(teg);
+                }
+            }
+
+            ViewBag.AllTegs = allTegs.Distinct().ToList();
+
             return View();
         }
 
-        public async Task<IActionResult> UserPage(int idUser)
+        public async Task<IActionResult> UserPage(string idUser)
         {   
             User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
             
@@ -39,10 +64,18 @@ namespace PersonalCollectionManagement.Controllers
             return View(collections);
         }
 
+        public async Task<IActionResult> Collections()
+        {
+            ViewBag.AutorizeUser = await GetAutorizeUser();
+
+            return View(db.Collections.ToList());
+        }
+
         #region Collection
         [HttpPost]
         public async Task<IActionResult> CreateCollection(CollectionModel collectionModel)
         {
+            
             List<Field> fields = new List<Field>();
 
             if (collectionModel.NameField != null)
@@ -64,7 +97,7 @@ namespace PersonalCollectionManagement.Controllers
 
             db.Collections.Add(collection);
             await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { nicknameUser = ownerCollection.Nickname });
+            return RedirectToAction("UserPage", "Home", new { idUser = ownerCollection.Id });
         }
 
         [HttpPost]
@@ -72,10 +105,10 @@ namespace PersonalCollectionManagement.Controllers
         {
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
             User ownerUser = await db.Users.FirstOrDefaultAsync(u => u.Id == collection.UserId);
-            string ownerNickname = ownerUser.Nickname;
+            string ownerId = ownerUser.Id;
             db.Remove(collection);
             await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { nicknameUser = ownerNickname });
+            return RedirectToAction("UserPage", "Home", new { idUser = ownerId });
         }
 
 
@@ -129,10 +162,10 @@ namespace PersonalCollectionManagement.Controllers
            
 
             User ownerUser = await db.Users.FirstOrDefaultAsync(u => u.Id == oldCollection.UserId);
-            string ownerNickname = ownerUser.Nickname;
+            string ownerId = ownerUser.Id;
             db.Collections.Update(oldCollection);
             await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { nicknameUser = ownerNickname });
+            return RedirectToAction("UserPage", "Home", new { idUser = ownerId });
         }
 
         public async Task<IActionResult> Collection(int idCollection)
@@ -179,7 +212,7 @@ namespace PersonalCollectionManagement.Controllers
 
             for (int i = 0; i < ViewBag.Comments.Count; i++)
             {
-                int userId = ViewBag.Comments[i].UserId;
+                string userId = ViewBag.Comments[i].UserId;
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Id == userId);
                 ViewBag.Comments[i].User = user;
             }
@@ -196,11 +229,9 @@ namespace PersonalCollectionManagement.Controllers
             return View(item);
         }
 
-        public async Task<IActionResult> Items(string searchText)
+        public async Task<IActionResult> Items(string act, string searchValue)
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
-            searchText = "%"+searchText+"%";
-
             List<Item> items = db.Items.ToList();
 
             for (int i = 0; i < items.Count; i++)
@@ -209,56 +240,69 @@ namespace PersonalCollectionManagement.Controllers
                 items[i].Collection = collection;
             }
 
-            Task<List<int>>[] tasks = new Task<List<int>>[5]
-            {
+            if (act == "search")
+            {                
+                searchValue = "%" + searchValue + "%";
+
+               
+                Task<List<int>>[] tasks = new Task<List<int>>[5]
+                {
                 new Task<List<int>>(() =>
                 {
-                return items.Where(x => EF.Functions.Like(x.Name, searchText)).Select(item => item.Id).ToList();
+                return items.Where(x => EF.Functions.Like(x.Name, searchValue)).Select(item => item.Id).ToList();
                 }),
                 new Task<List<int>>(() =>
                 {
-                return items.Where(x => EF.Functions.Like(x.Tegs, searchText)).Select(item => item.Id).ToList();
+                return items.Where(x => EF.Functions.Like(x.Tegs, searchValue)).Select(item => item.Id).ToList();
                 }),
                 new Task<List<int>>(() =>
                 {
-                    return items.Where(x => EF.Functions.Like(x.Values, searchText)).Select(item => item.Id).ToList();
+                    return items.Where(x => EF.Functions.Like(x.Values, searchValue)).Select(item => item.Id).ToList();
                 }),
 
                 new Task<List<int>>(() =>
                 {
-                    return items.Where(x => EF.Functions.Like(x.Collection.Description, searchText)).Select(item => item.Id).ToList();
+                    return items.Where(x => EF.Functions.Like(x.Collection.Description, searchValue)).Select(item => item.Id).ToList();
                 }),
 
                 new Task<List<int>>(() =>
                 {
-                    return db.Comments.Where(x => EF.Functions.Like(x.Text, searchText)).Select(comment => comment.ItemId).ToList();
+                    return db.Comments.Where(x => EF.Functions.Like(x.Text, searchValue)).Select(comment => comment.ItemId).ToList();
                 })
-            };
+                };
 
-            foreach (var t in tasks)
-            {
-                t.Start();
+                foreach (var t in tasks)
+                {
+                    t.Start();
+                }
+
+
+                Task.WaitAll(tasks);
+
+                List<int> allSearchedItemsId = tasks[0].Result.
+                     Union(tasks[1].Result.
+                     Union(tasks[2].Result.
+                     Union(tasks[3].Result.
+                     Union(tasks[4].Result)))).ToList();
+
+                List<Item> allSearchedItems = items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
+
+                return View(allSearchedItems);
             }
-                      
-
-            Task.WaitAll(tasks);
-
-            List<int> allSearchedItemsId = tasks[0].Result.
-                 Union(tasks[1].Result.
-                 Union(tasks[2].Result.
-                 Union(tasks[3].Result.
-                 Union(tasks[4].Result)))).ToList();
-
-            List<Item> allSearchedItems = items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
-
-            return View(allSearchedItems);
+            else
+            {
+                List<Item> allSearchedItems = items.Where(item => item.FormattedTegs.Contains(searchValue)).ToList();
+                return View(allSearchedItems);
+            }
         }
+            
 
         [NonAction]
         public async Task<User> GetAutorizeUser()
         {
-            string nicknameAutorizeUser = HttpContext.Request.Cookies["NicknameAutorizeUser"];
-            return await db.Users.FirstOrDefaultAsync(u => u.Nickname == nicknameAutorizeUser);
+            
+            string emailAutorizeUser = User.Identity.Name;
+            return await db.Users.FirstOrDefaultAsync(u => u.Email == emailAutorizeUser);
         }
 
         

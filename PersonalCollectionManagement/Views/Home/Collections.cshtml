@@ -1,1 +1,38 @@
-﻿
+﻿@{
+    @model List<PersonalCollectionManagement.Models.Collection>
+    ViewData["CurrentPage"] = "Collections"; 
+    ViewData["Title"] = "Коллекции";
+}
+
+@if (Model.Count == 0)
+{
+    <h2 class="text-info m-2">Список коллекций пуст</h2>
+}
+else
+{
+    <h2 class="text-info m-2">Список коллекций:</h2>
+    <table class="table table-dark .table-responsive">
+        <thead>
+            <tr>
+                <th scope="col">Название коллекции</th>
+                <th scope="col">Описание коллекции</th>
+                <th scope="col">Перейти</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var collection in Model)
+            {
+                <tr>
+                    <th scope="row">@collection.Name</th>
+                    <td>@collection.Description</td>
+                    
+                    <td>
+                        <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
+                            <button class="btn btn-primary" collectionId="@collection.Id">Перейти</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -32,6 +32,9 @@ namespace PersonalCollectionManagement.Models
         public string Fields { get; set; }
 
         [NotMapped]
+        public int CountItems { get; set; }
+
+        [NotMapped]
 
         public List<Field> FormattedFields
         {
@@ -68,7 +71,7 @@ namespace PersonalCollectionManagement.Models
             }
         }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public User User { get; set; }
     }

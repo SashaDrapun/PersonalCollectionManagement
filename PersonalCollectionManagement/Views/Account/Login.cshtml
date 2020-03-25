@@ -1,10 +1,26 @@
-﻿<div class="modal-dialog modal-dialog-centered " role="document">
+﻿@{
+    @model PersonalCollectionManagement.ViewModels.LoginModel
+    ViewData["CurrentPage"] = "Autorization"; 
+    ViewData["Title"] = "Авторизация";
+}
+
+<div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content text-white bg-dark">
         <div class="modal-header ">
             <h5 class="modal-title">Авторизация</h5>
         </div>
         <div class="modal-body">
             <div class="container-fluid">
+                <form method="post" asp-controller="Account" asp-action="ExternalLogins">
+                    <div>
+                        @foreach(var provider in Model.ExternalLogins)
+                        {
+                        <button class="btn btn-primary" name="provider" value="@provider.Name">
+                            @provider.DisplayName
+                        </button>
+                        }
+                    </div>
+                </form>
                 <form name="loginForm" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail">Email</label>
@@ -34,3 +50,4 @@
         </div>
     </div>
 </div>
+<script src="~/js/socialNetworks.js"></script>

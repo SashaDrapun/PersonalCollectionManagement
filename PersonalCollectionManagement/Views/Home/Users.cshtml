@@ -1,6 +1,7 @@
 ﻿@{
     @model List<PersonalCollectionManagement.Models.User>
     ViewData["Title"] = "Пользователи";
+    ViewData["CurrentPage"] = "Users";
 }
 
 <table class="table table-dark .table-responsive">
@@ -22,7 +23,7 @@
         @foreach (var user in Model)
         {
             <tr>
-                <th scope="row" >@user.Nickname</th>
+                <th scope="row">@user.Nickname</th>
                 <td>@user.DateRegistration</td>
                 <td>@user.DateLastLogin</td>
 

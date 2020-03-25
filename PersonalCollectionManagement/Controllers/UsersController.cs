@@ -17,7 +17,7 @@ namespace PersonalCollectionManagement.Controllers
             db = applicationContext;
         }
 
-        public async Task<IActionResult> ChangeStatus(int idUser)
+        public async Task<IActionResult> ChangeStatus(string idUser)
         {
             User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
 
@@ -26,7 +26,7 @@ namespace PersonalCollectionManagement.Controllers
             return RedirectToAction("Users", "Home");
         }
 
-        public async Task<IActionResult> Delete(int idUser)
+        public async Task<IActionResult> Delete(string idUser)
         {
             User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
             db.Users.Remove(user);
@@ -34,7 +34,7 @@ namespace PersonalCollectionManagement.Controllers
             return RedirectToAction("Users", "Home");
         }
 
-        public async Task<IActionResult> AppointAdministrator(int idUser)
+        public async Task<IActionResult> AppointAdministrator(string idUser)
         {
             User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
             user.IsAdmin = true;

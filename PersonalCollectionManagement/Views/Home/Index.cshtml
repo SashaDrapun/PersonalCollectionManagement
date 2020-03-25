@@ -1,7 +1,99 @@
 ﻿@{
     ViewData["Title"] = "Главная";
+    ViewData["CurrentPage"] = "Main";
 }
 
+    <h2 class="text-info ml-2">Последние добавленные элементы</h2>
 
+    <table class="table table-dark .table-responsive">
+        <thead>
+            <tr>
+                <th scope="col">Название элемента</th>
+                <th scope="col">Теги</th>
+                <th scope="col">Перейти к коллекции элемента</th>
+                <th scope="col">Перейти к владельцу элемента</th>
+                <th scope="col">Перейти к элементу</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.LastAddedItems)
+                {
+            <tr>
+                <th scope="row">@item.Name</th>
+                <td>@item.Tegs</td>
+                <td>
+                    <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@item.CollectionId">
+                        <button class="btn btn-primary">
+                            Перейти к коллекции
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@item.Collection.UserId">
+                        <button class="btn btn-primary">
+                            Перейти к владельцу
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
+                        <button class="btn btn-primary">
+                            Перейти к элементу
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <h2 class="text-info ml-2">Коллекции с наибольшим количеством элементов</h2>
+
+    <table class="table table-dark .table-responsive">
+        <thead>
+            <tr>
+                <th scope="col">Название коллекции</th>
+                <th scope="col">Описание коллекции</th>
+                <th scope="col">Количество элементов</th>
+                <th scope="col">Перейти к владельцу коллекции</th>
+                <th scope="col">Перейти к коллекции</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Collection collection in ViewBag.CollectionsWithMostOfItems)
+                    {
+            <tr>
+                <th scope="row">@collection.Name</th>
+                <td>@collection.Description</td>
+                <td>@collection.CountItems</td>
+
+                <td>
+                    <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@collection.UserId">
+                        <button class="btn btn-primary">
+                            Перейти к владельцу
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
+                        <button class="btn btn-primary">
+                            Перейти к коллекции
+                        </button>
+                    </form>
+                </td>
+            </tr>
+}
+        </tbody>
+    </table>
+
+    <div class="m-2">
+        @foreach(var tag in ViewBag.AllTegs)
+            {
+        <a class="text-white" asp-controller="Home" asp-action="Items" asp-route-searchValue="@tag">#@tag </a>
+            }
+    </div>
 
 

@@ -1,4 +1,9 @@
-﻿<div class="modal-dialog modal-dialog-centered " role="document">
+﻿@{
+    ViewData["CurrentPage"] = "Registration";
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content text-white bg-dark">
         <div class="modal-header ">
             <h5 class="modal-title">Регистрация</h5>
@@ -9,7 +14,7 @@
                     <div class="form-group">
                         <label for="InputEmail">Email</label>
                         <input type="email" name="email" class="form-control" id="InputEmail"
-                               placeholder="Email" >
+                               placeholder="Email">
                         @if (ViewBag.EmailMessage != null)
                         {
                             <small class="form-text text-danger">@ViewBag.EmailMessage</small>

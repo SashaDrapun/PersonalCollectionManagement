@@ -42,10 +42,6 @@ else
             </tr>
         </thead>
         <tbody>
-
-            @{
-                int i = 0;
-            }
             @foreach (var collection in Model)
             {
                 <tr>
@@ -75,18 +71,15 @@ else
                     }
 
                     <td>
-                        <form asp-controller="Home" asp-action="Collection">
-                            <input name="idCollection" value="@collection.Id" class="d-none">
+                        <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
                             <button class="btn btn-primary" collectionId="@collection.Id">Перейти</button>
                         </form>
                     </td>
                 </tr>
-                i++;
             }
         </tbody>
     </table>
 }
-
 
 <div class='modal fade' id='createCollection' tabindex="-1" role="dialog"
      aria-labelledby="createCollection" aria-hidden="true">

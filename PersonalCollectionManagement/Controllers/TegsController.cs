@@ -34,7 +34,7 @@ namespace PersonalCollectionManagement.Controllers
                     }
                 }
 
-                var sortedTegs = tegs.Where(x => x.StartsWith(term)).ToList();
+                var sortedTegs = tegs.Where(x => x.StartsWith(term)).Distinct().ToList();
                 return Ok(sortedTegs);
             }
             catch
