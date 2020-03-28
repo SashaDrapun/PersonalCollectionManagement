@@ -16,12 +16,18 @@ namespace PersonalCollectionManagement.Models
             Email = email;
             this.IsAdmin = false;
             this.Status = "Разблокирован";
+            this.Language = "ru";
+            this.Theme = "Dark";
         }
 
         public bool IsAdmin { get; set; }
         public string Nickname { get; set; }
 
         public string Status { get; set; }
+
+        public string Language { get; set; }
+
+        public string Theme { get; set; }
 
         public DateTime DateRegistration { get; set; }
 

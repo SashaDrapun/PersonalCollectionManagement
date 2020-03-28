@@ -41,7 +41,37 @@ namespace PersonalCollectionManagement.Controllers
             User userFromDatabaseByEmail = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             User userFromDatabaseByNickname = await db.Users.FirstOrDefaultAsync(u => u.Nickname == model.Nickname);
             bool isAllValid = true;
-            
+
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                ViewBag.EmailMessage = "Заполните поле";
+                isAllValid = false;
+            }
+
+            if (string.IsNullOrEmpty(model.Nickname))
+            {
+                ViewBag.NicknameMessage = "Заполните поле";
+                isAllValid = false;
+            }
+
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                ViewBag.PasswordMessage = "Заполните поле";
+                isAllValid = false;
+            }
+
+            if (string.IsNullOrEmpty(model.ConfirmPassword))
+            {
+                ViewBag.ConfirmPasswordMessage = "Заполните поле";
+                isAllValid = false;
+            } 
+
+            if(model.Password != model.ConfirmPassword)
+            {
+                ViewBag.ConfirmPasswordMessage = "Пароли не совпадают";
+                isAllValid = false;
+            }
+
             if (userFromDatabaseByEmail != null)
             {
                 ViewBag.EmailMessage = "Пользователь с такой почтой уже существует";
@@ -92,12 +122,19 @@ namespace PersonalCollectionManagement.Controllers
                 ViewBag.EmailMessage = "Пользователя с такой почтой не существует";
                 isAllValid = false;
             }
+
+            if( userFromDatabase.Status == "Заблокирован")
+            {
+                ViewBag.MessageAboutBlocked = "Вы заблокированы";
+                isAllValid = false;
+            }
+
             if (isAllValid)
             {
                 userFromDatabase.DateLastLogin = DateTime.Now;
 
                 await db.SaveChangesAsync();
-                var result = await signInManager.PasswordSignInAsync(userFromDatabase.Nickname,model.Password,false, false);
+                var result = await signInManager.PasswordSignInAsync(userFromDatabase.Email,model.Password,false, false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -173,6 +210,12 @@ namespace PersonalCollectionManagement.Controllers
 
                         var result = await userManager.CreateAsync(user);
                         await userManager.AddLoginAsync(user, info);
+                    }
+
+                    if(user.Status == "Заблокирован")
+                    {
+                        ViewBag.MessageAboutBlocked = "Вы заблокированы";
+                        return View("Login", loginModel);
                     }
 
                     await signInManager.SignInAsync(user, isPersistent: false);

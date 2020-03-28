@@ -46,16 +46,8 @@ document.querySelector('#addTeg').addEventListener('click', e => {
     document.querySelector('#allTegs').value = textAllTegs;
 });
 
-var availableTags = [
-    "Испанский",
-    "Итальянский",
-    "Английский",
-    "Китайский",
-    "Русский"
-];
-
-    $('#oneTag').autocomplete({
-        source: '/api/tegs/search',
-        appendTo: document.querySelector('#createItem')
-    });
+$('#oneTag').autocomplete({
+    source: '/api/tegs/search',
+    appendTo: document.querySelector('#createItem')
+});
 

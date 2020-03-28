@@ -11,21 +11,16 @@
         </div>
         <div class="modal-body">
             <div class="container-fluid">
-                <form method="post" asp-controller="Account" asp-action="ExternalLogins">
-                    <div>
-                        @foreach(var provider in Model.ExternalLogins)
-                        {
-                        <button class="btn btn-primary" name="provider" value="@provider.Name">
-                            @provider.DisplayName
-                        </button>
-                        }
-                    </div>
-                </form>
                 <form name="loginForm" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail">Email</label>
-                        <input type="email" name="email" class="form-control" id="exampleInputEmail"
-                               placeholder="Email" aria-describedby="emailHelp">
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               id="exampleInputEmail"
+                               placeholder="Email"
+                               pattern="([0-9a-z_.]+@(ViewData["Dog"])[0-9a-z_^.]+.[a-z]{2,3})+"
+                               title="Почта введена некорректно">
                         @if (ViewBag.EmailMessage != null)
                         {
                             <small class="form-text text-danger">@ViewBag.EmailMessage</small>
@@ -34,7 +29,10 @@
 
                     <div class="form-group">
                         <label for="exampleInputPassword">Пароль</label>
-                        <input type="password" name="password" class="form-control" id="exampleInputPassword"
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               id="exampleInputPassword"
                                placeholder="Пароль">
                         @if (ViewBag.PasswordMessage != null)
                         {
@@ -45,6 +43,18 @@
                     <button type="submit" class="btn btn-primary">
                         Авторизоваться
                     </button>
+                </form>
+
+                <h3>Авторизация с помощью социальных сетей</h3>
+                <form method="post" asp-controller="Account" asp-action="ExternalLogins">
+                    <div>
+                        @foreach (var provider in Model.ExternalLogins)
+                        {
+                            <button class="btn btn-primary" name="provider" value="@provider.Name">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
                 </form>
             </div>
         </div>

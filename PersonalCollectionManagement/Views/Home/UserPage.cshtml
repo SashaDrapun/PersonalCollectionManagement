@@ -3,6 +3,7 @@
     @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname)
     {
         ViewData["Title"] = "Моя страница";
+        ViewBag.OnwPage = true;
     }
     else
     {
@@ -10,9 +11,10 @@
     }
 
     ViewBag.FullAccess = false;
-    @if(ViewBag.AutorizeUser != null)
+    @if (ViewBag.AutorizeUser != null)
     {
-        if((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin){
+        if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+        {
             ViewBag.FullAccess = true;
         }
     }
@@ -30,9 +32,8 @@ else
             <tr>
                 <th scope="col">Название коллекции</th>
                 <th scope="col">Описание коллекции</th>
-                <th scope="col">Тема</th>
                 <th scope="col">Картинка</th>
-                @if(ViewBag.FullAccess)
+                @if (ViewBag.FullAccess)
                 {
                     <th scope="col">Редактировать</th>
                     <th scope="col">Удалить</th>
@@ -47,9 +48,8 @@ else
                 <tr>
                     <th scope="row">@collection.Name</th>
                     <td>@collection.Description</td>
-                    <td>@collection.Theme</td>
                     <td>@collection.Image</td>
-                    @if(ViewBag.FullAccess)
+                    @if (ViewBag.FullAccess)
                     {
                         <td>
                             <button class="btn btn-danger editCollection"
@@ -181,8 +181,16 @@ else
     </div>
 </div>
 
-@if (ViewBag.FullAccess){
-        <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createCollection">Создать коллекцию</button>
+@if (ViewBag.FullAccess)
+{
+    <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createCollection">Создать коллекцию</button>
+}
+
+@if (ViewBag.OnwPage != null)
+{
+    <form asp-controller="Home" asp-action="UserSettings">
+        <button class="btn btn-primary m-2">Перейти к настройкам</button>
+    </form>
 }
 
 <script src="~/js/UserPage.js"></script>

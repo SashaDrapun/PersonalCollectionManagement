@@ -244,7 +244,6 @@ namespace PersonalCollectionManagement.Controllers
             {                
                 searchValue = "%" + searchValue + "%";
 
-               
                 Task<List<int>>[] tasks = new Task<List<int>>[5]
                 {
                 new Task<List<int>>(() =>
@@ -295,7 +294,13 @@ namespace PersonalCollectionManagement.Controllers
                 return View(allSearchedItems);
             }
         }
-            
+
+        public async Task<IActionResult> UserSettings()
+        {
+            ViewBag.AutorizeUser = await GetAutorizeUser();
+            return View();
+        }
+
 
         [NonAction]
         public async Task<User> GetAutorizeUser()

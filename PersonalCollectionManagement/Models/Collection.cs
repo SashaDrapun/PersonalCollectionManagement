@@ -14,7 +14,6 @@ namespace PersonalCollectionManagement.Models
             Name = name;
             Description = description;
             Image = "path";
-            Theme = "Тема";
         }
 
         [Key]
@@ -24,8 +23,6 @@ namespace PersonalCollectionManagement.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
-
-        public string Theme { get; set; }
 
         public string Image { get; set; }
 
