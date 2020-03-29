@@ -60,13 +60,15 @@ namespace PersonalCollectionManagement.Models
             {
                 List<string> result = new List<string>();
 
-                string[] tegs = Tegs.Split(new char[] { '#' });
-
-                for (int i = 1; i < tegs.Length; i++)
+                if(Tegs != null)
                 {
-                    result.Add(tegs[i]);
-                }
+                    string[] tegs = Tegs.Split(new char[] { '#' });
 
+                    for (int i = 1; i < tegs.Length; i++)
+                    {
+                        result.Add(tegs[i]);
+                    }
+                }
                 return result;
             }
         }

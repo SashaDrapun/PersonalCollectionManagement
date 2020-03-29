@@ -2,12 +2,12 @@
     ViewData["Title"] = "Настройки";
 }
 <div class="m-3">
-    <h2 class="text-white">Настройки профиля</h2>
+    <h2 class="text-@ViewBag.Text">Настройки профиля</h2>
 
     <form asp-controller="Settings" asp-action="ChangeLanguage"  asp-route-idUser="@ViewBag.AutorizeUser.Id">
-        <p class="text-white">Выберите язык</p>
-        <select class="text-white text-white bg-dark languageSelect">
-            @if (@ViewBag.AutorizeUser.Language == "ru")
+        <p class="text-@ViewBag.Text">Выберите язык</p>
+        <select class="text-@ViewBag.Text bg-@ViewBag.Bg languageSelect">
+            @if (ViewBag.AutorizeUser.Language == "ru")
             {
                 <option selected>Русский</option>
                 <option>Английский</option>
@@ -28,9 +28,9 @@
     </form>
 
     <form asp-controller="Settings" asp-action="ChangeTheme" asp-route-idUser="@ViewBag.AutorizeUser.Id">
-        <p class="text-white">Выберите тему</p>
-        <select class="text-white bg-dark themeSelect">
-            @if (ViewBag.AutorizeUser.Theme == "Dark")
+        <p class="text-@ViewBag.Text">Выберите тему</p>
+        <select class="text-@ViewBag.Text bg-@ViewBag.Bg themeSelect">
+            @if(ViewBag.Bg == "dark")
             {
                 <option selected>Темная</option>
                 <option>Светлая</option>

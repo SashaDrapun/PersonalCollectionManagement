@@ -17,7 +17,7 @@
 else
 {
     <p class="text-danger m-2">Список элементов коллекции:</p>
-    <table class="table table-dark .table-responsive" id="sortedTable">
+    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg" id="sortedTable">
         <thead>
             <tr>
                 <th scope="col" onclick='sortTable(0)'>Название элемента</th>
@@ -108,7 +108,7 @@ else
 <div class='modal fade' id='createItem' tabindex="-1" role="dialog"
      aria-labelledby="createCollection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content text-white bg-dark">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
                 <h5 class="modal-title " id="ModalLabel">Создание элемента</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
@@ -185,7 +185,7 @@ else
 <div class='modal fade' id='deleteItem' tabindex="-1" role="dialog"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content text-white bg-dark">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
                 <h5 class="modal-title text-danger">Удаление элемента</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
@@ -209,7 +209,7 @@ else
 <div class='modal fade' id='editItem' tabindex="-1" role="dialog"
      aria-labelledby="createCollection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content text-white bg-dark">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
                 <h5 class="modal-title" id="ModalLabel">Редактирование элемента</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">

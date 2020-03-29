@@ -20,9 +20,9 @@ namespace PersonalCollectionManagement.Controllers
             db = applicationContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            ViewBag.AutorizeUser = await GetAutorizeUser();
+            await SetViewBag();
 
             ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Collection).Take(5).ToList();
 
@@ -35,15 +35,18 @@ namespace PersonalCollectionManagement.Controllers
                     Count();
             }
 
-            ViewBag.CollectionsWithMostOfItems = collections.OrderByDescending(x=>x.CountItems).Take(5);
+            ViewBag.CollectionsWithMostOfItems = collections.OrderByDescending(x => x.CountItems).Take(5);
 
             List<string> allTegs = new List<string>();
 
-            foreach(var item in db.Items)
+            if (db.Items.Count() != 0)
             {
-                foreach(var teg in item.FormattedTegs)
+                foreach (var item in db.Items)
                 {
-                    allTegs.Add(teg);
+                    foreach (var teg in item.FormattedTegs)
+                    {
+                        allTegs.Add(teg);
+                    }
                 }
             }
 
@@ -53,21 +56,19 @@ namespace PersonalCollectionManagement.Controllers
         }
 
         public async Task<IActionResult> UserPage(string idUser)
-        {   
+        {
+            await SetViewBag();
+
             User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
             
             List<Collection> collections = db.Collections.Where(x => x.UserId == ownerCollections.Id).ToList();
-
-            ViewBag.AutorizeUser = await GetAutorizeUser();
             ViewBag.OwnerCollections = ownerCollections;
-
             return View(collections);
         }
 
-        public async Task<IActionResult> Collections()
+        public async Task<IActionResult> CollectionsAsync()
         {
-            ViewBag.AutorizeUser = await GetAutorizeUser();
-
+            await SetViewBag();
             return View(db.Collections.ToList());
         }
 
@@ -170,6 +171,7 @@ namespace PersonalCollectionManagement.Controllers
 
         public async Task<IActionResult> Collection(int idCollection)
         {
+            await SetViewBag();
             List<Item> items = db.Items.Where(x => x.CollectionId == idCollection).ToList();
 
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
@@ -189,23 +191,20 @@ namespace PersonalCollectionManagement.Controllers
             {
                 items[0].Collection = collection;
             }
-            ViewBag.AutorizeUser = await GetAutorizeUser();
             return View(items);
         }
         #endregion
 
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> UsersAsync()
         {
-            ViewBag.AutorizeUser = await GetAutorizeUser();
-            List<User> users = db.Users.ToList();
-
-            return View(users);
+            await SetViewBag();
+            return View(db.Users.ToList());
         }
         public async Task<IActionResult> Item(int id)
         {
+            await SetViewBag();
             User autorizeUser = await GetAutorizeUser();
-            ViewBag.AutorizeUser = autorizeUser;
-
+           
             Item item = await db.Items.FirstOrDefaultAsync(x => x.Id == id);
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == item.CollectionId);
             ViewBag.Comments = db.Comments.Where(x => x.ItemId == id).OrderByDescending(x=>x.DateTime).ToList();
@@ -231,7 +230,7 @@ namespace PersonalCollectionManagement.Controllers
 
         public async Task<IActionResult> Items(string act, string searchValue)
         {
-            ViewBag.AutorizeUser = await GetAutorizeUser();
+            await SetViewBag();
             List<Item> items = db.Items.ToList();
 
             for (int i = 0; i < items.Count; i++)
@@ -297,7 +296,7 @@ namespace PersonalCollectionManagement.Controllers
 
         public async Task<IActionResult> UserSettings()
         {
-            ViewBag.AutorizeUser = await GetAutorizeUser();
+            await SetViewBag();
             return View();
         }
 
@@ -305,9 +304,22 @@ namespace PersonalCollectionManagement.Controllers
         [NonAction]
         public async Task<User> GetAutorizeUser()
         {
-            
             string emailAutorizeUser = User.Identity.Name;
             return await db.Users.FirstOrDefaultAsync(u => u.Email == emailAutorizeUser);
+        }
+
+        [NonAction]
+        public async Task<bool> SetViewBag()
+        {
+            ViewBag.AutorizeUser = await GetAutorizeUser();
+            ViewBag.Bg = "dark";
+            ViewBag.Text = "light";
+            if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Theme != "Dark")
+            {
+                ViewBag.Bg = "light";
+                ViewBag.Text = "dark";
+            }
+            return true;
         }
 
         

@@ -59,6 +59,11 @@ namespace PersonalCollectionManagement
                 {
                     options.ClientId = "1089335293941-dn83q857h9e2328clepr1shdpvbieiph.apps.googleusercontent.com";
                     options.ClientSecret = "xrItBYwGlCKeln4AZFNROjmh";
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "1063794657329915";
+                    options.AppSecret = "1d7f0f3abf0018dbec7422369bd37ac3";
                 });
         }
 
