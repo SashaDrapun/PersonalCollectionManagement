@@ -53,6 +53,7 @@ namespace PersonalCollectionManagement.Controllers
                 Id = itemModel.IdItem,
                 CollectionId = itemModel.IdCollection,
                 Name = itemModel.ItemName,
+                Tegs = itemModel.Tegs,
                 FormattedValues = itemModel.ItemValue
             };
 

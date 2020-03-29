@@ -123,7 +123,7 @@ namespace PersonalCollectionManagement.Controllers
                 isAllValid = false;
             }
 
-            if( userFromDatabase.Status == "Заблокирован")
+            if(isAllValid && userFromDatabase.Status == "Заблокирован")
             {
                 ViewBag.MessageAboutBlocked = "Вы заблокированы";
                 isAllValid = false;

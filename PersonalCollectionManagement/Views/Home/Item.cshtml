@@ -13,7 +13,6 @@
             @foreach (var item in Model.Collection.FormattedFields)
             {
                 <th scope="col">@item.Name</th>
-
             }
 
             <th scope="col">Лайки</th>
@@ -117,5 +116,30 @@
     </div>
 </div>
 }
+
+<div class='modal fade' id='notFullAccess' tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
+            <div class="modal-header ">
+                <h5 class="modal-title text-danger">Вы не авторизованы</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-info">Чтобы оставить комментарий или поставить лайк, авторизуйтесь!!!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ок</button>
+                <form asp-controller="Account" asp-action="Login" method="get">
+                    <input name="idCollection" id="idCollection" class="d-none">
+                    <button type="submit" class="btn btn-primary">Перейти к авторизации</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script src="~/js/Item.js"></script>

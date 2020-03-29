@@ -1,11 +1,4 @@
-﻿function getCookie(name) {
-    let matches = document.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-const hubConnection = new signalR.HubConnectionBuilder()
+﻿const hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("/item")
     .build();
 
@@ -62,7 +55,8 @@ async function DeleteLike(nickname) {
 }
 
 document.querySelector('.like').addEventListener('click', () => {
-    const nicknameAutorizeUser = getCookie('NicknameAutorizeUser');
+    const userNicknameContainer = document.querySelector('#userNickname');
+    const nicknameAutorizeUser = userNicknameContainer == null ? undefined : userNicknameContainer.textContent;
     if (nicknameAutorizeUser != undefined) {
         let isUserLike = document.querySelector('#isUserLike').textContent === 'False' ? false : true;
         if (isUserLike) {
@@ -74,18 +68,22 @@ document.querySelector('.like').addEventListener('click', () => {
         }
     }
     else {
-        console.log('Показать модальное окно');
+        $('#notFullAccess').modal('show');
     }
 });
 
 document.forms["commentForm"].addEventListener("submit", e => {
     e.preventDefault();
-    const nicknameAutorizeUser = getCookie('NicknameAutorizeUser');
+    const userNicknameContainer = document.querySelector('#userNickname');
+    const nicknameAutorizeUser = userNicknameContainer == null ? undefined : userNicknameContainer.textContent;
     if (nicknameAutorizeUser != undefined) {
         const form = document.forms["commentForm"];
         const text = form.elements["text"].value;
         const idItem = document.querySelector('#idItem').textContent;
         AddComment(nicknameAutorizeUser, idItem, text);
+    }
+    else {
+        $('#notFullAccess').modal('show');
     }
 });
 

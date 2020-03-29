@@ -1,15 +1,20 @@
 ﻿@{
     @model List<PersonalCollectionManagement.Models.Item>
     ViewData["Title"] = "Коллекция " + Model[0].Collection.Name;
+    ViewBag.FullAccess = false;
+    @if (ViewBag.AutorizeUser != null)
+    {
+        if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+        {
+            ViewBag.FullAccess = true;
+        }
+    }
 }
 
 <link rel="stylesheet" href="~/css/jquery-ui.css">
 <link rel="stylesheet" href="~/css/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="~/css/jquery-ui.theme.css">
-<script src="~/js/jquery-ui.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="~/js/sort.js"></script>
+
 @if (Model.Count == 1 && Model[0].Id == 0)
 {
     <p class="text-danger m-2">В коллекции пока нет элементов</p>
@@ -27,8 +32,12 @@ else
                     <th scope="col" onclick='sortTable(@i+2)'>@Model[0].Collection.FormattedFields[i].Name</th>
                 }
 
-                <th scope="col">Редактировать</th>
-                <th scope="col">Удалить</th>
+                @if (ViewBag.FullAccess)
+                {
+                    <th scope="col">Редактировать</th>
+                    <th scope="col">Удалить</th>
+                }
+
                 <th scope="col">Перейти</th>
 
             </tr>
@@ -76,23 +85,26 @@ else
                             }
                         }
                     }
-
-                    <td>
-                        <button class="btn btn-danger editItem"
-                                idItem="@item.Id"
-                                valuesItem="@item.Values"
-                                nameItem="@item.Name"
-                                data-toggle="modal" data-target="#editItem">
-                            Редактировать
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger deleteItem"
-                                idItem="@item.Id"
-                                data-toggle="modal" data-target="#deleteItem">
-                            Удалить
-                        </button>
-                    </td>
+                    @if (ViewBag.FullAccess)
+                    {
+                        <td>
+                            <button class="btn btn-danger editItem"
+                                    idItem="@item.Id"
+                                    valuesItem="@item.Values"
+                                    nameItem="@item.Name"
+                                    tegsItem="@item.Tegs"
+                                    data-toggle="modal" data-target="#editItem">
+                                Редактировать
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger deleteItem"
+                                    idItem="@item.Id"
+                                    data-toggle="modal" data-target="#deleteItem">
+                                Удалить
+                            </button>
+                        </td>
+                    }
 
                     <td>
                         <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
@@ -129,7 +141,7 @@ else
                         <input type="text" name="tegs" id="allTegs" class="form-control" readonly>
                         <p>Добавить #</p>
                         <input type="text" class="form-control" id="oneTag" placeholder="Введите ваш #">
-                        <button id="addTeg" class="btn btn-primary mt-2">Добавить</button>
+                        <button id="addTeg" class="btn btn-primary mt-2">Добавить #</button>
                         @if (Model[0].Collection.FormattedFields.Count != 0)
                         {
                             <p>Заполните поля</p>
@@ -171,10 +183,14 @@ else
                             </div>
                         }
 
-                        <button asp-controller="Collection" asp-action="CreateItem"
-                                class="btn btn-primary m-2">
-                            Сохранить
-                        </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                            <button asp-controller="Collection" asp-action="CreateItem"
+                                    class="btn btn-primary m-2">
+                                Сохранить
+                            </button>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -226,6 +242,13 @@ else
                                    placeholder="Название" aria-describedby="emailHelp">
                         </div>
                         <p class="text-info">Отредактируйте данные и нажмите кнопку сохранить изменения</p>
+
+                        <p>Добавьте #</p>
+                        <p>Ваши #</p>
+                        <input type="text" name="tegs" id="allTegsEdit" class="form-control" readonly>
+                        <p>Добавить #</p>
+                        <input type="text" class="form-control" id="oneTagEdit" placeholder="Введите ваш #">
+                        <button id="addTegEdit" class="btn btn-primary mt-2">Добавить #</button>
                         @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                         {
                             var field = Model[0].Collection.FormattedFields[i];
@@ -263,7 +286,6 @@ else
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-
                             <input name="IdItem" id="idItemEdit" class="d-none">
                             <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                         </div>
@@ -274,8 +296,14 @@ else
     </div>
 </div>
 
+@if(ViewBag.FullAccess)
+{
+    <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">Добавить элемент</button>
+}
 
-<button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">Добавить элемент</button>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="~/js/sort.js"></script>
+<script src="~/js/jquery-ui.min.js"></script>
 <script src="~/js/Collection.js"></script>
 
 
