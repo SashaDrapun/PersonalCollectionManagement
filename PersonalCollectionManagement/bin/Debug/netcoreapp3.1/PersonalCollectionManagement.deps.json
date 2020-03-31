@@ -38,6 +38,7 @@
           "Microsoft.SqlServer.DacFx.x64": "150.4573.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.1",
           "React.AspNet": "5.2.4",
+          "jQuery.filedrop": "1.0.1",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions.Reference": "3.1.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies.Reference": "3.1.0.0",
@@ -300,6 +301,14 @@
         "runtime": {
           "PersonalCollectionManagement.dll": {}
         },
+        "resources": {
+          "en/PersonalCollectionManagement.resources.dll": {
+            "locale": "en"
+          },
+          "ru/PersonalCollectionManagement.resources.dll": {
+            "locale": "ru"
+          }
+        },
         "compile": {
           "PersonalCollectionManagement.dll": {}
         }
@@ -405,6 +414,7 @@
           "lib/netstandard2.0/JavaScriptEngineSwitcher.Extensions.MsDependencyInjection.dll": {}
         }
       },
+      "jQuery.filedrop/1.0.1": {},
       "JSPool/4.0.0": {
         "dependencies": {
           "JavaScriptEngineSwitcher.Core": "3.3.0"
@@ -4334,6 +4344,13 @@
       "sha512": "sha512-3jGJS7bSzXN6r1ejDjfNP2noGJGJYkb5nyIsxn/dRqStGda7kHxFPI2ONMlnWdXyfhFl5CAlseLk37lb54+6Iw==",
       "path": "javascriptengineswitcher.extensions.msdependencyinjection/3.3.0",
       "hashPath": "javascriptengineswitcher.extensions.msdependencyinjection.3.3.0.nupkg.sha512"
+    },
+    "jQuery.filedrop/1.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-onEhmpyJp0wkNMSBTyoF/BD0Fl+7YwXRUXfXD74cbXAzVy7zSMo9XmbtnSBwteOgimzmoZGhywfzx91AUBM28g==",
+      "path": "jquery.filedrop/1.0.1",
+      "hashPath": "jquery.filedrop.1.0.1.nupkg.sha512"
     },
     "JSPool/4.0.0": {
       "type": "package",

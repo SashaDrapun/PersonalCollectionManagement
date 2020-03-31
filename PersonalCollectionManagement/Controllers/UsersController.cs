@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using PersonalCollectionManagement.Models;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,20 @@ namespace PersonalCollectionManagement.Controllers
 {
     public class UsersController : Controller
     {
-        ApplicationContext db;
+        private ApplicationContext db;
+        private readonly IStringLocalizer<UsersController> localizer;
 
-        public UsersController(ApplicationContext applicationContext)
+        public UsersController(ApplicationContext applicationContext, IStringLocalizer<UsersController> localizer)
         {
             db = applicationContext;
+            this.localizer = localizer;
         }
 
         public async Task<IActionResult> ChangeStatus(string idUser)
         {
             User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
 
-            user.Status = user.Status == "Разблокирован" ? "Заблокирован" : "Разблокирован";
+            user.Status = user.Status == "Разблокирован" ? localizer["Blocked"] : localizer["Unlocked"];
             await db.SaveChangesAsync();
             return RedirectToAction("Users", "Home");
         }

@@ -1,22 +1,24 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     @model List<PersonalCollectionManagement.Models.User>
-    ViewData["Title"] = "Пользователи";
+    ViewData["Title"] = Localizer["Users"];
     ViewData["CurrentPage"] = "Users";
 }
 
 <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
     <thead>
         <tr>
-            <th scope="col">Никнейм</th>
-            <th scope="col">Дата регистрации</th>
-            <th scope="col">Дата последнего входа</th>
+            <th scope="col">@Localizer["Nickname"]</th>
+            <th scope="col">@Localizer["LastLoginDate"]</th>
+            <th scope="col">@Localizer["RegistrationDate"]</th>
             @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.IsAdmin)
             {
-                <th scope="col">Заблокировать/Разблокировать</th>
-                <th scope="col">Удалить</th>
-                <th scope="col">Назначить администратором</th>
+                <th scope="col">@Localizer["BlockUnlock"]</th>
+                <th scope="col">@Localizer["Delete"]</th>
+                <th scope="col">@Localizer["SetAsAdministrator"]</th>
             }
-            <th scope="col">Перейти</th>
+            <th scope="col">@Localizer["GoTo"]</th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +36,7 @@
                     <td>
                         <form asp-controller="Users" asp-action="ChangeStatus" asp-route-idUser="@user.Id">
                             <button class="btn btn-danger">
-                                @(user.Status == "Разблокирован" ? "Заблокировать" : "Разблокировать")
+                                @(user.Status == "Разблокирован" ? Localizer["Block"] : Localizer["Unlock"])
                             </button>
                         </form>
                     </td>
@@ -45,24 +47,24 @@
                             <button class="btn btn-danger deleteUser"
                                     idUser="@user.Id"
                                     data-toggle="modal" data-target="#deleteUser">
-                                Удалить
+                                @Localizer["Delete"]
                             </button>
                         </td>
                         <td>
                             <button class="btn btn-danger setAdmin"
                                     idUser="@user.Id"
                                     data-toggle="modal" data-target="#setAdmin">
-                                Назначить администратором
+                                @Localizer["SetAsAdministrator"]
                             </button>
                         </td>
                     }
                     else
                     {
                         <td>
-                            <p class="text-info">Админ</p>
+                            <p class="text-info">@Localizer["Admin"]</p>
                         </td>
                         <td>
-                            <p class="text-info">Админ</p>
+                            <p class="text-info">@Localizer["Admin"]</p>
                         </td>
                     }
                 }
@@ -70,7 +72,7 @@
                 <td>
                     <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@user.Id">
                         <button class="btn btn-primary">
-                            Перейти
+                            @Localizer["GoTo"]
                         </button>
                     </form>
                 </td>

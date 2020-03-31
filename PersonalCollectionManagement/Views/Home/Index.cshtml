@@ -1,29 +1,60 @@
-﻿@{
-    ViewData["Title"] = "Главная";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Title"];
     ViewData["CurrentPage"] = "Main";
 }
-    <h2 class="text-info ml-2">Последние добавленные элементы</h2>
 
-    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
-        <thead>
-            <tr>
-                <th scope="col">Название элемента</th>
-                <th scope="col">Теги</th>
-                <th scope="col">Перейти к коллекции элемента</th>
-                <th scope="col">Перейти к владельцу элемента</th>
-                <th scope="col">Перейти к элементу</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.LastAddedItems)
-                {
+@*<h2>Drag and Drop file upload</h2>
+    <div id="dropArea">
+        Drop your files here
+    </div>
+
+    <h4>Uploaded files</h4>
+    <ul class="list-group" id="uploadList">
+    </ul>
+
+    <style>
+        #dropArea {
+            background: "#b5b5b5";
+            border: black dashed 1px;
+            height: 50px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .active-drop {
+            background: "#77bafa";
+            border: solid 2px blue !important;
+            opacity: .5;
+            color: black !important;
+        }
+    </style>*@
+
+
+
+<h2 class="text-info ml-2">@Localizer["LastAddedItems"]</h2>
+
+<table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
+    <thead>
+        <tr>
+            <th scope="col">@Localizer["NameElement"]</th>
+            <th scope="col">@Localizer["Tegs"]</th>
+            <th scope="col">@Localizer["GoToElementCollection"]</th>
+            <th scope="col">@Localizer["GoToElementOwner"]</th>
+            <th scope="col">@Localizer["GoToElement"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.LastAddedItems)
+        {
             <tr>
                 <th scope="row">@item.Name</th>
                 <td>@item.Tegs</td>
                 <td>
                     <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@item.CollectionId">
                         <button class="btn btn-primary">
-                            Перейти к коллекции
+                            @Localizer["GoToElementCollection"]
                         </button>
                     </form>
                 </td>
@@ -31,7 +62,7 @@
                 <td>
                     <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@item.Collection.UserId">
                         <button class="btn btn-primary">
-                            Перейти к владельцу
+                            @Localizer["GoToElementOwner"]
                         </button>
                     </form>
                 </td>
@@ -39,30 +70,30 @@
                 <td>
                     <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
                         <button class="btn btn-primary">
-                            Перейти к элементу
+                            @Localizer["GoToElement"]
                         </button>
                     </form>
                 </td>
             </tr>
         }
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <h2 class="text-info ml-2">Коллекции с наибольшим количеством элементов</h2>
+<h2 class="text-info ml-2">@Localizer["CollectionsWithMostOfItems"]</h2>
 
-    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
-        <thead>
-            <tr>
-                <th scope="col">Название коллекции</th>
-                <th scope="col">Описание коллекции</th>
-                <th scope="col">Количество элементов</th>
-                <th scope="col">Перейти к владельцу коллекции</th>
-                <th scope="col">Перейти к коллекции</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Collection collection in ViewBag.CollectionsWithMostOfItems)
-                    {
+<table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
+    <thead>
+        <tr>
+            <th scope="col">@Localizer["NameCollection"]</th>
+            <th scope="col">@Localizer["DescriptionCollection"]</th>
+            <th scope="col">@Localizer["CountElements"]</th>
+            <th scope="col">@Localizer["GoToOwnerCollection"]</th>
+            <th scope="col">@Localizer["GoToCollection"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Collection collection in ViewBag.CollectionsWithMostOfItems)
+        {
             <tr>
                 <th scope="row">@collection.Name</th>
                 <td>@collection.Description</td>
@@ -71,7 +102,7 @@
                 <td>
                     <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@collection.UserId">
                         <button class="btn btn-primary">
-                            Перейти к владельцу
+                            @Localizer["GoToOwnerCollection"]
                         </button>
                     </form>
                 </td>
@@ -79,20 +110,47 @@
                 <td>
                     <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
                         <button class="btn btn-primary">
-                            Перейти к коллекции
+                            @Localizer["GoToCollection"]
                         </button>
                     </form>
                 </td>
             </tr>
-}
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <div class="m-2">
-        @foreach(var tag in ViewBag.AllTegs)
-            {
+<div class="m-2">
+    @foreach (var tag in ViewBag.AllTegs)
+    {
         <a class="text-@ViewBag.Text" asp-controller="Home" asp-action="Items" asp-route-searchValue="@tag">#@tag </a>
-            }
-    </div>
+    }
+</div>
 
-
+@*<script src="~/js/filedrop.js"></script>*@
+@*<script>
+            $(function () {
+                $('#droparea').filedrop({
+                    url: '@Url.Action("UploadFiles")',
+                    allowedfiletypes: ['image/jpeg', 'image/png', 'image/gif'],
+                    allowedfileextensions: ['.jpg', '.jpeg', '.png', '.gif'],
+                    paramname: 'files',
+                    maxfiles: 1,
+                    maxfilesize: 5,
+                    dragOver: function () {
+                        $('#droparea').addClass('active-drop');
+                    },
+                    dragLeave: function () {
+                        $('#droparea').removeClass('active-drop');
+                    },
+                    drop: function () {
+                        $('#droparea').removeClass('active-drop');
+                    },
+                    afterAll: function (e) {
+                        $('#droparea').html('file(s) uploaded successfully');
+                    },
+                    uploadFinished: function (i, file, response, time) {
+                        $('#uploadList').append('<li class="list-group-item">' + file.name + '</li>')
+                    }
+                });
+            });
+    </script>*@

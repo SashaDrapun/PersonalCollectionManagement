@@ -1,21 +1,23 @@
-﻿@{ 
-    ViewData["Title"] = "Настройки";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Settings"];
 }
 <div class="m-3">
-    <h2 class="text-@ViewBag.Text">Настройки профиля</h2>
+    <h2 class="text-@ViewBag.Text">@Localizer["ProfileSettings"]</h2>
 
-    <form asp-controller="Settings" asp-action="ChangeLanguage"  asp-route-idUser="@ViewBag.AutorizeUser.Id">
-        <p class="text-@ViewBag.Text">Выберите язык</p>
+    <form asp-controller="Settings" asp-action="ChangeLanguage" asp-route-idUser="@ViewBag.AutorizeUser.Id">
+        <p class="text-@ViewBag.Text">@Localizer["ChooseLanguage"]</p>
         <select class="text-@ViewBag.Text bg-@ViewBag.Bg languageSelect">
             @if (ViewBag.AutorizeUser.Language == "ru")
             {
-                <option selected>Русский</option>
-                <option>Английский</option>
+                <option selected>@Localizer["Russian"]</option>
+                <option>@Localizer["English"]</option>
             }
             else
             {
-                <option>Русский</option>
-                <option selected>Английский</option>
+                <option>@Localizer["Russian"]</option>
+                <option selected>@Localizer["English"]</option>
             }
         </select>
 
@@ -24,29 +26,29 @@
                id="languageValue"
                value="@ViewBag.AutorizeUser.Language">
 
-        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <button type="submit" class="btn btn-primary">@Localizer["SaveChanges"]</button>
     </form>
 
     <form asp-controller="Settings" asp-action="ChangeTheme" asp-route-idUser="@ViewBag.AutorizeUser.Id">
-        <p class="text-@ViewBag.Text">Выберите тему</p>
+        <p class="text-@ViewBag.Text">@Localizer["ChooseATopic"]</p>
         <select class="text-@ViewBag.Text bg-@ViewBag.Bg themeSelect">
-            @if(ViewBag.Bg == "dark")
+            @if (ViewBag.Bg == "dark")
             {
-                <option selected>Темная</option>
-                <option>Светлая</option>
+            <option selected>@Localizer["Dark"]</option>
+            <option>@Localizer["Light"]</option>
             }
             else
             {
-                <option>Темная</option>
-                <option selected>Светлая</option>
+                <option>@Localizer["Dark"]</option>
+                <option selected>@Localizer["Light"]</option>
             }
 
         </select>
         <input class="d-none"
                name="theme"
                value="@ViewBag.AutorizeUser.Theme"
-                id="ThemeValue">
-        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+               id="ThemeValue">
+        <button type="submit" class="btn btn-primary">@Localizer["SaveChanges"]</button>
     </form>
 </div>
 

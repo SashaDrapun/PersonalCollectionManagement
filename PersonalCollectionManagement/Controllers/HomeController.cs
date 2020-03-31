@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using PersonalCollectionManagement.Models;
 using PersonalCollectionManagement.ViewModels;
@@ -13,14 +16,14 @@ namespace PersonalCollectionManagement.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationContext db;
+        private ApplicationContext db;
 
         public HomeController(ApplicationContext applicationContext)
         {
             db = applicationContext;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             await SetViewBag();
 
@@ -55,6 +58,17 @@ namespace PersonalCollectionManagement.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult UploadFiles(IEnumerable<IFormFile> files)
+        {
+            foreach(var file in files)
+            {
+                string filePath = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                
+            }
+            return Json("Good");
+        }
+
         public async Task<IActionResult> UserPage(string idUser)
         {
             await SetViewBag();
@@ -66,7 +80,7 @@ namespace PersonalCollectionManagement.Controllers
             return View(collections);
         }
 
-        public async Task<IActionResult> CollectionsAsync()
+        public async Task<IActionResult> Collections()
         {
             await SetViewBag();
             return View(db.Collections.ToList());
@@ -172,6 +186,7 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Collection(int idCollection)
         {
             await SetViewBag();
+            
             List<Item> items = db.Items.Where(x => x.CollectionId == idCollection).ToList();
 
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
@@ -191,6 +206,8 @@ namespace PersonalCollectionManagement.Controllers
             {
                 items[0].Collection = collection;
             }
+
+            ViewBag.OwnerCollection = await db.Users.FirstOrDefaultAsync(x => x.Id == collection.UserId);
             return View(items);
         }
         #endregion

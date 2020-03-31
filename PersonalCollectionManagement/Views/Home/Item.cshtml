@@ -1,7 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     @model PersonalCollectionManagement.Models.Item
 
-    ViewData["Title"] = "Элемент - " + Model.Name;
+    ViewData["Title"] = Localizer["Element"] + " " + Model.Name;
 }
 
 <p class="d-none" id="isUserLike">@ViewBag.IsUserLike</p>
@@ -9,14 +11,14 @@
 <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
     <thead>
         <tr>
-            <th scope="col">Название элемента</th>
+            <th scope="col">@Localizer["ItemName"]</th>
             @foreach (var item in Model.Collection.FormattedFields)
             {
                 <th scope="col">@item.Name</th>
             }
 
-            <th scope="col">Лайки</th>
-            <th scope="col">Комментарии</th>
+            <th scope="col">@Localizer["Likes"]</th>
+            <th scope="col">@Localizer["Comments"]</th>
         </tr>
     </thead>
     <tbody>
@@ -83,7 +85,7 @@
 <div class="modal-dialog" role="document" id="formCommentModal">
     <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
         <div class="modal-header ">
-            <h5 class="modal-title">Оставьте ваш комментарий</h5>
+            <h5 class="modal-title">@Localizer["LeaveYourComment"]</h5>
         </div>
         <form name="commentForm">
             <div class="modal-body">
@@ -92,7 +94,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary">Комментировать</button>
+                <button class="btn btn-primary">@Localizer["Comment"]</button>
             </div>
         </form>
     </div>
@@ -100,21 +102,21 @@
 
 @foreach (var comment in ViewBag.Comments)
 {
-<div>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
-            <div class="modal-header ">
-                <h5 class="modal-title ">@comment.User.Nickname</h5>
-                <p>@comment.DateTime</p>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <span>@comment.Text</span>
+    <div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
+                <div class="modal-header ">
+                    <h5 class="modal-title ">@comment.User.Nickname</h5>
+                    <p>@comment.DateTime</p>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <span>@comment.Text</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 <div class='modal fade' id='notFullAccess' tabindex="-1" role="dialog"
@@ -122,24 +124,25 @@
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
-                <h5 class="modal-title text-danger">Вы не авторизованы</h5>
+                <h5 class="modal-title text-danger">@Localizer["YouAreNotAuthorized"]</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p class="text-info">Чтобы оставить комментарий или поставить лайк, авторизуйтесь!!!</p>
+                <p class="text-info">@Localizer["WarningToUnauthorizedUser"]</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Ок</button>
                 <form asp-controller="Account" asp-action="Login" method="get">
                     <input name="idCollection" id="idCollection" class="d-none">
-                    <button type="submit" class="btn btn-primary">Перейти к авторизации</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["GoToAuthorization"]</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script src="~/js/Item.js"></script>

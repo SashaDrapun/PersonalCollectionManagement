@@ -101,6 +101,9 @@
           "lib/netstandard2.0/JavaScriptEngineSwitcher.Extensions.MsDependencyInjection.dll": {}
         }
       },
+      "jQuery.filedrop/1.0.1": {
+        "type": "package"
+      },
       "JSPool/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -3406,6 +3409,18 @@
         "lib/netstandard2.0/JavaScriptEngineSwitcher.Extensions.MsDependencyInjection.dll",
         "lib/netstandard2.0/JavaScriptEngineSwitcher.Extensions.MsDependencyInjection.xml",
         "readme.txt"
+      ]
+    },
+    "jQuery.filedrop/1.0.1": {
+      "sha512": "onEhmpyJp0wkNMSBTyoF/BD0Fl+7YwXRUXfXD74cbXAzVy7zSMo9XmbtnSBwteOgimzmoZGhywfzx91AUBM28g==",
+      "type": "package",
+      "path": "jquery.filedrop/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/Scripts/jquery.filedrop.js",
+        "jquery.filedrop.1.0.1.nupkg.sha512",
+        "jquery.filedrop.nuspec"
       ]
     },
     "JSPool/4.0.0": {
@@ -9717,7 +9732,8 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.2",
       "Microsoft.SqlServer.DacFx.x64 >= 150.4573.2",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.1",
-      "React.AspNet >= 5.2.4"
+      "React.AspNet >= 5.2.4",
+      "jQuery.filedrop >= 1.0.1"
     ]
   },
   "packageFolders": {
@@ -9819,6 +9835,10 @@
           "React.AspNet": {
             "target": "Package",
             "version": "[5.2.4, )"
+          },
+          "jQuery.filedrop": {
+            "target": "Package",
+            "version": "[1.0.1, )"
           }
         },
         "imports": [

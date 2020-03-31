@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionManagement.Models;
 using System;
@@ -19,6 +21,11 @@ namespace PersonalCollectionManagement.Controllers
 
         public async Task<IActionResult> ChangeLanguage(string idUser,string language)
         {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
             User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
 
             user.Language = language;

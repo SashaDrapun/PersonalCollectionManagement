@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using PersonalCollectionManagement.Models;
 using PersonalCollectionManagement.ViewModels;
 
@@ -17,20 +18,24 @@ namespace PersonalCollectionManagement.Controllers
 {
     public class AccountController : Controller
     {
-        ApplicationContext db;
+        private ApplicationContext db;
         private SignInManager<User> signInManager;
         private UserManager<User> userManager;
-        public AccountController(ApplicationContext applicationContext, SignInManager<User> signInManager, UserManager<User> 
-            userManager)
+        private readonly IStringLocalizer<AccountController> localizer;
+
+        public AccountController(ApplicationContext applicationContext,SignInManager<User> signInManager,
+            UserManager<User> userManager,IStringLocalizer<AccountController> localizer)
         {
             db = applicationContext;
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.localizer = localizer;
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
+            SetViewBag();
             return View();
         }
 
@@ -38,48 +43,49 @@ namespace PersonalCollectionManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
+            SetViewBag();
             User userFromDatabaseByEmail = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             User userFromDatabaseByNickname = await db.Users.FirstOrDefaultAsync(u => u.Nickname == model.Nickname);
             bool isAllValid = true;
 
             if (string.IsNullOrEmpty(model.Email))
             {
-                ViewBag.EmailMessage = "Заполните поле";
+                ViewBag.EmailMessage = localizer["FillInTheField"];
                 isAllValid = false;
             }
 
             if (string.IsNullOrEmpty(model.Nickname))
             {
-                ViewBag.NicknameMessage = "Заполните поле";
+                ViewBag.NicknameMessage = localizer["FillInTheField"];
                 isAllValid = false;
             }
 
             if (string.IsNullOrEmpty(model.Password))
             {
-                ViewBag.PasswordMessage = "Заполните поле";
+                ViewBag.PasswordMessage = localizer["FillInTheField"];
                 isAllValid = false;
             }
 
             if (string.IsNullOrEmpty(model.ConfirmPassword))
             {
-                ViewBag.ConfirmPasswordMessage = "Заполните поле";
+                ViewBag.ConfirmPasswordMessage = localizer["FillInTheField"];
                 isAllValid = false;
             } 
 
             if(model.Password != model.ConfirmPassword)
             {
-                ViewBag.ConfirmPasswordMessage = "Пароли не совпадают";
+                ViewBag.ConfirmPasswordMessage = localizer["PasswordMismatch"];
                 isAllValid = false;
             }
 
             if (userFromDatabaseByEmail != null)
             {
-                ViewBag.EmailMessage = "Пользователь с такой почтой уже существует";
+                ViewBag.EmailMessage = localizer["UserEmailExists"];
                 isAllValid = false;
             }
             if (userFromDatabaseByNickname != null)
             {
-                ViewBag.NicknameMessage = "Пользователь с таким никнеймом уже существует";
+                ViewBag.NicknameMessage = localizer["UserNicknameExists"];
                 isAllValid = false;
             }
             if (isAllValid)
@@ -104,6 +110,7 @@ namespace PersonalCollectionManagement.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
+            SetViewBag();
             LoginModel loginModel = new LoginModel()
             {
                 ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
@@ -114,18 +121,25 @@ namespace PersonalCollectionManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
+            SetViewBag();
             User userFromDatabase = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             bool isAllValid = true;
 
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                ViewBag.PasswordMessage = localizer["FillInTheField"];
+                isAllValid = false;
+            }
+
             if (userFromDatabase == null)
             {
-                ViewBag.EmailMessage = "Пользователя с такой почтой не существует";
+                ViewBag.EmailMessage = localizer["UserEmailNotExists"];
                 isAllValid = false;
             }
 
             if(isAllValid && userFromDatabase.Status == "Заблокирован")
             {
-                ViewBag.MessageAboutBlocked = "Вы заблокированы";
+                ViewBag.MessageAboutBlocked = localizer["YouAreBlocked"];
                 isAllValid = false;
             }
 
@@ -141,7 +155,7 @@ namespace PersonalCollectionManagement.Controllers
                 }
                 else
                 {
-                    ViewBag.PasswordMessage = "Пароль введен неверно";
+                    ViewBag.PasswordMessage = localizer["PasswordEnteredIncorrectly"];
                 }
             }
             LoginModel loginModel = new LoginModel()
@@ -170,7 +184,7 @@ namespace PersonalCollectionManagement.Controllers
             };
             if (remoteError != null)
             {
-                ModelState.AddModelError(string.Empty, $"Ошибка провайдера{ remoteError }");
+                ModelState.AddModelError(string.Empty, localizer["ProviderError"] + remoteError);
 
                 return View("Login", loginModel);
             }
@@ -179,7 +193,7 @@ namespace PersonalCollectionManagement.Controllers
 
             if(info == null)
             {
-                ModelState.AddModelError(string.Empty, $"Не удалось загрузить информацию провайдера");
+                ModelState.AddModelError(string.Empty, localizer["FailedToLoadProviderInformation"]);
                 return View("Login", loginModel);
             }
 
@@ -214,7 +228,7 @@ namespace PersonalCollectionManagement.Controllers
 
                     if(user.Status == "Заблокирован")
                     {
-                        ViewBag.MessageAboutBlocked = "Вы заблокированы";
+                        ViewBag.MessageAboutBlocked = localizer["YouAreBlocked"];
                         return View("Login", loginModel);
                     }
 
@@ -223,8 +237,8 @@ namespace PersonalCollectionManagement.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ViewBag.ErrorTitle = $"{info.LoginProvider} не предоставил ваш email";
-                ViewBag.ErrorMessage = $"Cвяжитесь с разработчиком по почте dr.sasha2602@mail.ru";
+                ViewBag.ErrorTitle = $"{info.LoginProvider} "+ localizer["NotProvideYourEmail"];
+                ViewBag.ErrorMessage = localizer["ContactDeveloper"] + " dr.sasha2602@mail.ru";
                 return View("Error");
             }
         }
@@ -232,6 +246,19 @@ namespace PersonalCollectionManagement.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [NonAction]
+        public bool SetViewBag()
+        {
+            ViewBag.Bg = "dark";
+            ViewBag.Text = "light";
+            if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Theme != "Dark")
+            {
+                ViewBag.Bg = "light";
+                ViewBag.Text = "dark";
+            }
+            return true;
         }
     }
 }

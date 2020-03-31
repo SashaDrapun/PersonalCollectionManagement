@@ -1,26 +1,29 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     @model PersonalCollectionManagement.ViewModels.LoginModel
-    ViewData["CurrentPage"] = "Autorization"; 
-    ViewData["Title"] = "Авторизация";
+    ViewData["CurrentPage"] = "Autorization";
+    ViewData["Title"] = Localizer["Authorization"];
+    ViewData["Dog"] = "@";
 }
 
 <div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content text-white bg-dark">
         <div class="modal-header ">
-            <h5 class="modal-title">Авторизация</h5>
+            <h5 class="modal-title">@Localizer["Authorization"]</h5>
         </div>
         <div class="modal-body">
             <div class="container-fluid">
                 <form name="loginForm" method="post">
                     <div class="form-group">
-                        <label for="exampleInputEmail">Email</label>
+                        <label for="exampleInputEmail">@Localizer["Email"]</label>
                         <input type="email"
                                name="email"
                                class="form-control"
                                id="exampleInputEmail"
                                placeholder="Email"
                                pattern="([0-9a-z_.]+@(ViewData["Dog"])[0-9a-z_^.]+.[a-z]{2,3})+"
-                               title="Почта введена некорректно">
+                               title="@Localizer["MailEnteredIncorrectly"]">
                         @if (ViewBag.EmailMessage != null)
                         {
                             <small class="form-text text-danger">@ViewBag.EmailMessage</small>
@@ -28,24 +31,24 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleInputPassword">Пароль</label>
+                        <label for="exampleInputPassword">@Localizer["Password"]</label>
                         <input type="password"
                                name="password"
                                class="form-control"
                                id="exampleInputPassword"
-                               placeholder="Пароль">
+                               placeholder="@Localizer["Password"]">
                         @if (ViewBag.PasswordMessage != null)
                         {
                             <small class="form-text text-danger">@ViewBag.PasswordMessage</small>
                         }
                     </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        Авторизоваться
+                    <button type="submit" class="btn btn-primary mb-2">
+                        @Localizer["LogIn"]
                     </button>
                 </form>
 
-                <h3>Авторизация с помощью социальных сетей</h3>
+                <h5>@Localizer["SocialLogin"]</h5>
                 <form method="post" asp-controller="Account" asp-action="ExternalLogins">
                     <div>
                         @foreach (var provider in Model.ExternalLogins)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +36,23 @@ namespace PersonalCollectionManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+            .AddDataAnnotationsLocalization()
+            .AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                new CultureInfo("en"),
+                new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
             services.AddMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddReact();
@@ -41,17 +60,16 @@ namespace PersonalCollectionManagement
             services.AddDbContext<ApplicationContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>(opts =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
-                opts.Password.RequiredLength = 1;   // минимальная длина
-                opts.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
-                opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
-                opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
-                opts.Password.RequireDigit = false; // требуются ли цифры
+                options.Password.RequiredLength = 1;   // минимальная длина
+                options.Password.RequireNonAlphanumeric = false;   // требуются ли не алфавитно-цифровые символы
+                options.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
+                options.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
+                options.Password.RequireDigit = false; // требуются ли цифры
             }).
             AddEntityFrameworkStores<ApplicationContext>();
                 
-            services.AddControllersWithViews();
             services.AddSignalR();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthentication()
@@ -80,8 +98,9 @@ namespace PersonalCollectionManagement
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+           
             app.UseReact(config => { });
+            app.UseRequestLocalization();
             app.UseDefaultFiles();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
