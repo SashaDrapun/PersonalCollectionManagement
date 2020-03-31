@@ -14,7 +14,6 @@ namespace PersonalCollectionManagement.Models
             Name = name;
             Description = description;
             Image = "path";
-            Theme = "Тема";
         }
 
         [Key]
@@ -25,11 +24,12 @@ namespace PersonalCollectionManagement.Models
 
         public string Description { get; set; }
 
-        public string Theme { get; set; }
-
         public string Image { get; set; }
 
         public string Fields { get; set; }
+
+        [NotMapped]
+        public int CountItems { get; set; }
 
         [NotMapped]
 
@@ -38,13 +38,17 @@ namespace PersonalCollectionManagement.Models
             get
             {
                 List<Field> result = new List<Field>();
-                string[] field = Fields.Split(new char[] { ';' });
 
-                for (int i = 0; i < field.Length; i++)
+                if(!string.IsNullOrEmpty(Fields))
                 {
-                    string[] partsOfField = field[i].Split(new char[] { ',' });
+                    string[] field = Fields.Split(new char[] { ';' });
 
-                    result.Add(new Field(partsOfField[0], partsOfField[1]));
+                    for (int i = 0; i < field.Length; i++)
+                    {
+                        string[] partsOfField = field[i].Split(new char[] { ',' });
+
+                        result.Add(new Field(partsOfField[0], partsOfField[1]));
+                    }
                 }
 
                 return result;
@@ -64,7 +68,7 @@ namespace PersonalCollectionManagement.Models
             }
         }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public User User { get; set; }
     }

@@ -1,0 +1,196 @@
+﻿@{
+    @model List<PersonalCollectionManagement.Models.Collection>
+    @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname)
+    {
+        ViewData["Title"] = "Моя страница";
+        ViewBag.OnwPage = true;
+    }
+    else
+    {
+        ViewData["Title"] = "Страница пользователя " + ViewBag.OwnerCollections.Nickname;
+    }
+
+    ViewBag.FullAccess = false;
+    @if (ViewBag.AutorizeUser != null)
+    {
+        if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollections.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+        {
+            ViewBag.FullAccess = true;
+        }
+    }
+}
+
+@if (Model.Count == 0)
+{
+    <h2 class="text-danger m-2">Список коллекций пуст</h2>
+}
+else
+{
+    <h2 class="text-danger m-2">Список коллекций:</h2>
+    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
+        <thead>
+            <tr>
+                <th scope="col">Название коллекции</th>
+                <th scope="col">Описание коллекции</th>
+                <th scope="col">Картинка</th>
+                @if (ViewBag.FullAccess)
+                {
+                    <th scope="col">Редактировать</th>
+                    <th scope="col">Удалить</th>
+                }
+
+                <th scope="col">Перейти</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var collection in Model)
+            {
+                <tr>
+                    <th scope="row">@collection.Name</th>
+                    <td>@collection.Description</td>
+                    <td>@collection.Image</td>
+                    @if (ViewBag.FullAccess)
+                    {
+                        <td>
+                            <button class="btn btn-danger editCollection"
+                                    collectionId="@collection.Id"
+                                    collectionFields="@collection.Fields"
+                                    collectionName="@collection.Name"
+                                    collectionDescription="@collection.Description"
+                                    data-toggle="modal" data-target="#editCollection">
+                                Редактировать
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger deleteCollection"
+                                    collectionId="@collection.Id"
+                                    data-toggle="modal" data-target="#deleteCollection">
+                                Удалить
+                            </button>
+                        </td>
+                    }
+
+                    <td>
+                        <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
+                            <button class="btn btn-primary" collectionId="@collection.Id">Перейти</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class='modal fade' id='createCollection' tabindex="-1" role="dialog"
+     aria-labelledby="createCollection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="ModalLabel">Создание коллекции</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form name="loginForm" method="post">
+                        <input type="text" name="nicknameUser" class="d-none" value="@ViewBag.OwnerCollections.Nickname">
+                        <div class="form-group">
+                            <label for="nameCollection">Название коллекции</label>
+                            <input type="text" name="nameCollection" class="form-control" id="nameCollection"
+                                   placeholder="Название" aria-describedby="emailHelp">
+                        </div>
+
+                        <label for="description">Описание</label>
+                        <div class="form-group">
+                            <textarea id="description" rows="3" cols="35" name="description"></textarea>
+                        </div>
+                        <button class="btn btn-primary m-2 createField">Добавить поле</button>
+                        <button asp-controller="Home" asp-action="CreateCollection"
+                                class="btn btn-primary m-2">
+                            Сохранить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='modal fade' id='deleteCollection' tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
+            <div class="modal-header ">
+                <h5 class="modal-title text-danger">Удаление коллекции</h5>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Вы уверены, что хотите удалить коллекцию?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form asp-controller="Home" asp-action="DeleteCollection" method="post">
+                    <input name="idCollection" id="idCollection" class="d-none">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='modal fade' id='editCollection' tabindex="-1" role="dialog"
+     aria-labelledby="editCollection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="ModalLabel">Изменение коллекции</h5>
+                <p class="text-danger">Измения полей в коллекции затронут все элементы коллекции</p>
+                <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Home" asp-action="EditCollection" method="post">
+                <div class="modal-body">
+                    <div class="container-fluid">
+
+                        <input type="text" name="idCollection" id="idCollectionEdit" class="d-none">
+                        <div class="form-group">
+                            <label for="nameCollection">Название коллекции</label>
+                            <input type="text" name="nameCollection" class="form-control" id="nameCollectionEdit"
+                                   placeholder="Название" aria-describedby="emailHelp">
+                        </div>
+
+                        <label for="description">Описание</label>
+                        <div class="form-group">
+                            <textarea id="descriptionEdit" rows="3" cols="35" name="description"></textarea>
+                        </div>
+                        <button id="createFieldEdit" class="btn btn-primary m-2 createField">Добавить поле</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+
+                    <input name="idCollection" id="idCollection" class="d-none">
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.FullAccess)
+{
+    <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createCollection">Создать коллекцию</button>
+}
+
+@if (ViewBag.OnwPage != null)
+{
+    <form asp-controller="Home" asp-action="UserSettings">
+        <button class="btn btn-primary m-2">Перейти к настройкам</button>
+    </form>
+}
+
+<script src="~/js/UserPage.js"></script>

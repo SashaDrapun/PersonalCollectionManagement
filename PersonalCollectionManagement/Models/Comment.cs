@@ -15,11 +15,11 @@ namespace PersonalCollectionManagement.Models
         public string Text { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
+        public User User { get; set; }
 
         [ForeignKey("Item")]
         public int ItemId { get; set; }
-
-        public Item Item { get; set; }
     }
 }

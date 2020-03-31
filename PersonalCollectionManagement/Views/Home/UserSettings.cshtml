@@ -1,0 +1,53 @@
+﻿@{ 
+    ViewData["Title"] = "Настройки";
+}
+<div class="m-3">
+    <h2 class="text-@ViewBag.Text">Настройки профиля</h2>
+
+    <form asp-controller="Settings" asp-action="ChangeLanguage"  asp-route-idUser="@ViewBag.AutorizeUser.Id">
+        <p class="text-@ViewBag.Text">Выберите язык</p>
+        <select class="text-@ViewBag.Text bg-@ViewBag.Bg languageSelect">
+            @if (ViewBag.AutorizeUser.Language == "ru")
+            {
+                <option selected>Русский</option>
+                <option>Английский</option>
+            }
+            else
+            {
+                <option>Русский</option>
+                <option selected>Английский</option>
+            }
+        </select>
+
+        <input class="d-none"
+               name="language"
+               id="languageValue"
+               value="@ViewBag.AutorizeUser.Language">
+
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    </form>
+
+    <form asp-controller="Settings" asp-action="ChangeTheme" asp-route-idUser="@ViewBag.AutorizeUser.Id">
+        <p class="text-@ViewBag.Text">Выберите тему</p>
+        <select class="text-@ViewBag.Text bg-@ViewBag.Bg themeSelect">
+            @if(ViewBag.Bg == "dark")
+            {
+                <option selected>Темная</option>
+                <option>Светлая</option>
+            }
+            else
+            {
+                <option>Темная</option>
+                <option selected>Светлая</option>
+            }
+
+        </select>
+        <input class="d-none"
+               name="theme"
+               value="@ViewBag.AutorizeUser.Theme"
+                id="ThemeValue">
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    </form>
+</div>
+
+<script src="~/js/settings.js"></script>
