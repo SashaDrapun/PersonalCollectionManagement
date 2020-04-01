@@ -52,73 +52,63 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <th scope="row">@item.Name</th>
-                    <th scope="row">@item.Tegs</th>
+            <tr>
+                <th scope="row">@item.Name</th>
+                <th scope="row">@item.Tegs</th>
 
-                    @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                {
+                    var field = Model[0].Collection.FormattedFields[i];
+
+                    if (field.Type == "Текстовый")
                     {
-                        var field = Model[0].Collection.FormattedFields[i];
-
-                        @if (field.Type == "Числовой")
-                        {
-                            <th scope="row"><input type="number" readonly value="@item.FormattedValues[i]"></th>
-                        }
-
-                        @if (field.Type == "Строковый")
-                        {
-                            <th scope="row"><input type="text" readonly value="@item.FormattedValues[i]"></th>
-                        }
-
-                        @if (field.Type == "Текстовый")
-                        {
-                            <th scope="row">@item.MarkdownFormattedValues[i]</th>
-                        }
-
-                        @if (field.Type == "Дата")
-                        {
-                            <th scope="row"><input type="datetime" readonly value="@item.FormattedValues[i]"></th>
-                        }
-
-                        @if (field.Type == "Логический")
-                        {
-                            @if (@item.FormattedValues[i] == "on")
-                            {
-                                <th scope="row"><input type="checkbox" disabled checked></th>
-                            }
-                            else
-                            {
-                                <th scope="row"><input type="checkbox" disabled></th>
-                            }
-                        }
-                    }
-                    @if (ViewBag.FullAccess)
-                    {
-                        <td>
-                            <button class="btn btn-danger editItem"
-                                    idItem="@item.Id"
-                                    valuesItem="@item.Values"
-                                    nameItem="@item.Name"
-                                    tegsItem="@item.Tegs"
-                                    data-toggle="modal" data-target="#editItem">
-                                @Localizer["Edit"]
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger deleteItem"
-                                    idItem="@item.Id"
-                                    data-toggle="modal" data-target="#deleteItem">
-                                @Localizer["Delete"]
-                            </button>
-                        </td>
+                        <th scope="row">@item.MarkdownFormattedValues[i]</th>
                     }
 
+                    if (field.Type == "Логический")
+                    {
+                        @if (@item.FormattedValues[i] == "on")
+                        {
+                            <th scope="row"><input type="checkbox" disabled checked></th>
+                        }
+                        else
+                        {
+                            <th scope="row"><input type="checkbox" disabled></th>
+                        }
+                    }
+
+                    if (field.Type != "Текстовый" && field.Type != "Логический")
+                    {
+                        <th scope="row">@item.FormattedValues[i]</th>
+                    }
+                }
+                @if (ViewBag.FullAccess)
+                {
                     <td>
-                        <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
-                            <button class="btn btn-primary">@Localizer["GoOver"]</button>
-                        </form>
+                        <button class="btn btn-danger editItem"
+                                idItem="@item.Id"
+                                valuesItem="@item.Values"
+                                nameItem="@item.Name"
+                                tegsItem="@item.Tegs"
+                                data-toggle="modal" data-target="#editItem">
+                            @Localizer["Edit"]
+                        </button>
                     </td>
-                </tr>
+                    <td>
+                        <button class="btn btn-danger deleteItem"
+                                idItem="@item.Id"
+                                data-toggle="modal" data-target="#deleteItem">
+                            @Localizer["Delete"]
+                        </button>
+                    </td>
+                }
+
+                <td>
+                    <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
+                        <button class="btn btn-primary">@Localizer["GoOver"]</button>
+                    </form>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -246,12 +236,12 @@ else
                                    placeholder="@Localizer["ItemName"]">
                         </div>
 
-                        <p>@Localizer["Add"] #</p>
                         <p>@Localizer["Your"] #</p>
-                        <input type="text" name="tegs" id="allTegsEdit" class="form-control" readonly>
-                        <p>@Localizer["Add2"] #</p>
+                        <input type="text" name="tegs" id="allTegsEdit" class="form-control mb-2" readonly>
                         <input type="text" class="form-control" id="oneTagEdit" placeholder="@Localizer["Enter"] #">
-                        <button id="addTegEdit" class="btn btn-primary mt-2">@Localizer["Add2"] #</button>
+                        <div>
+                            <button id="addTegEdit" class="btn btn-primary mt-2 mb-2">@Localizer["Add2"] #</button>
+                        </div>
                         @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                         {
                             var field = Model[0].Collection.FormattedFields[i];
