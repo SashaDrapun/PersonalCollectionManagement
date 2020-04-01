@@ -41,7 +41,7 @@
 
                 @if (field.Type == "Текстовый")
                 {
-                    <th scope="row"><textarea readonly>@Model.FormattedValues[i]</textarea></th>
+                    <th scope="row">@Model.MarkdownFormattedValues[i]</th>
                 }
 
                 @if (field.Type == "Дата")

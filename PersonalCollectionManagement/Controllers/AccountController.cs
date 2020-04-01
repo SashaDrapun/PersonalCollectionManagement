@@ -96,6 +96,10 @@ namespace PersonalCollectionManagement.Controllers
                     DateRegistration = DateTime.Now,
                     DateLastLogin = DateTime.Now
                 };
+                if(db.Users.Count() == 0)
+                {
+                    user.IsAdmin = true;
+                }
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

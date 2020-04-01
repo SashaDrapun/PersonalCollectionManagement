@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -50,6 +51,20 @@ namespace PersonalCollectionManagement.Models
                 }
                
                 Values = result;
+            }
+        }
+
+        [NotMapped]
+        public List<HtmlString> MarkdownFormattedValues
+        {
+            get
+            {
+                List<HtmlString> markdownValues = new List<HtmlString>();
+                for (int i = 0; i < FormattedValues.Count; i++)
+                {
+                    markdownValues.Add(Markdown.ParseHtmlString(FormattedValues[i]));
+                }
+                return markdownValues;
             }
         }
 

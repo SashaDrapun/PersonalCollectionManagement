@@ -26,7 +26,6 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Index()
         {
             await SetViewBag();
-
             ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Collection).Take(5).ToList();
 
             List<Collection> collections = db.Collections.ToList();
@@ -190,6 +189,8 @@ namespace PersonalCollectionManagement.Controllers
             List<Item> items = db.Items.Where(x => x.CollectionId == idCollection).ToList();
 
             Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
+
+            ViewBag.CollectionDescription = Markdown.ParseHtmlString(collection.Description);
 
             if (items.Count == 0)
             {

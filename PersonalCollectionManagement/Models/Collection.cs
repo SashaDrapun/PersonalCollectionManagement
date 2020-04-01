@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,15 @@ namespace PersonalCollectionManagement.Models
         public string Image { get; set; }
 
         public string Fields { get; set; }
+
+        [NotMapped]
+        public HtmlString MarkdownDescription 
+        {
+            get
+            {
+                return Markdown.ParseHtmlString(Description);
+            }
+        }
 
         [NotMapped]
         public int CountItems { get; set; }

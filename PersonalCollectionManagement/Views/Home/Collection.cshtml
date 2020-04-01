@@ -2,7 +2,7 @@
 @inject IViewLocalizer Localizer
 @{
     @model List<PersonalCollectionManagement.Models.Item>
-    ViewData["Title"] = Localizer["Collection"] + " " + Model[0].Collection.Name;
+    ViewData["Title"] = Localizer["Collection"].Value + " " + Model[0].Collection.Name;
     ViewBag.FullAccess = false;
     @if (ViewBag.AutorizeUser != null)
     {
@@ -17,13 +17,18 @@
 <link rel="stylesheet" href="~/css/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="~/css/jquery-ui.theme.css">
 
+<div class="text-@ViewBag.Text m-2">
+    <h5>Описание коллекции</h5>
+    @Model[0].Collection.MarkdownDescription
+</div>
+
 @if (Model.Count == 1 && Model[0].Id == 0)
 {
-    <p class="text-danger m-2">@Localizer["CollectionIsEmpty"]</p>
+    <h5 class="text-info m-2">@Localizer["CollectionIsEmpty"]</h5>
 }
 else
 {
-    <p class="text-danger m-2">@Localizer["ListOfCollectionItems"]</p>
+    <h5 class="text-info m-2">@Localizer["ListOfCollectionItems"]</h5>
     <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg" id="sortedTable">
         <thead>
             <tr>
@@ -67,7 +72,7 @@ else
 
                         @if (field.Type == "Текстовый")
                         {
-                            <th scope="row"><textarea readonly>@item.FormattedValues[i]</textarea></th>
+                            <th scope="row">@item.MarkdownFormattedValues[i]</th>
                         }
 
                         @if (field.Type == "Дата")
@@ -144,7 +149,7 @@ else
                         <button id="addTeg" class="btn btn-primary mt-2">@Localizer["Add2"] #</button>
                         @if (Model[0].Collection.FormattedFields.Count != 0)
                         {
-                        <p>@Localizer["FillInTheFields"]</p>
+                            <p>@Localizer["FillInTheFields"]</p>
                         }
 
                         @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
@@ -296,7 +301,7 @@ else
 
 @if (ViewBag.FullAccess)
 {
-<button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">@Localizer["AddItem"]</button>
+    <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">@Localizer["AddItem"]</button>
 }
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
