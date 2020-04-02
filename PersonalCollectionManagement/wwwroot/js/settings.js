@@ -7,5 +7,5 @@
 
 document.querySelector('.themeSelect').addEventListener('change', e => {
     const value = document.querySelector('#ThemeValue').value;
-    document.querySelector('#ThemeValue').value = value == "Dark" ? "Light" : "Dark";
+    document.querySelector('#ThemeValue').value = (value == "dark" ? "light" : "dark");
 });

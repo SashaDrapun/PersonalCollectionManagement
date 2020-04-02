@@ -24,6 +24,8 @@
     ".NETCoreApp,Version=v3.1": {
       "PersonalCollectionManagement/1.0.0": {
         "dependencies": {
+          "Google.Apis.Drive.v2": "1.45.0.1895",
+          "Google.Apis.Drive.v3": "1.45.0.1895",
           "JavaScriptEngineSwitcher.ChakraCore": "3.4.4",
           "JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64": "3.4.4",
           "JavaScriptEngineSwitcher.ChakraCore.Native.osx-x64": "3.4.4",
@@ -324,6 +326,84 @@
         },
         "compile": {
           "lib/netstandard2.0/AdvancedStringBuilder.dll": {}
+        }
+      },
+      "Google.Apis/1.45.0": {
+        "dependencies": {
+          "Google.Apis.Core": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.dll": {}
+        }
+      },
+      "Google.Apis.Auth/1.45.0": {
+        "dependencies": {
+          "Google.Apis": "1.45.0",
+          "Google.Apis.Core": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          },
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
+        }
+      },
+      "Google.Apis.Core/1.45.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.Drive.v2/1.45.0.1895": {
+        "dependencies": {
+          "Google.Apis": "1.45.0",
+          "Google.Apis.Auth": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Drive.v2.dll": {
+            "assemblyVersion": "1.45.0.1895",
+            "fileVersion": "1.45.0.1895"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Drive.v2.dll": {}
+        }
+      },
+      "Google.Apis.Drive.v3/1.45.0.1895": {
+        "dependencies": {
+          "Google.Apis": "1.45.0",
+          "Google.Apis.Auth": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Drive.v3.dll": {
+            "assemblyVersion": "1.45.0.1895",
+            "fileVersion": "1.45.0.1895"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Drive.v3.dll": {}
         }
       },
       "JavaScriptEngineSwitcher.ChakraCore/3.4.4": {
@@ -4322,6 +4402,41 @@
       "sha512": "sha512-IbN3r5whlJvi8MhCDPVpIb+NVScyUcKSdcJZrnoXFDyzPDISl3AbWouNBYIHRdZdfGuzqCQEhM1vkxbIKqQVaQ==",
       "path": "advancedstringbuilder/0.1.0",
       "hashPath": "advancedstringbuilder.0.1.0.nupkg.sha512"
+    },
+    "Google.Apis/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V/huVWohIr8c2Zg9+W+8fBElPd8Smz03k8e+tq/X9JsRdvAPaCBNwvMVNoyPbH+x/2tEFyX+n1jvIGFNC4hLzw==",
+      "path": "google.apis/1.45.0",
+      "hashPath": "google.apis.1.45.0.nupkg.sha512"
+    },
+    "Google.Apis.Auth/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dPAhjWofPoGzNjjgmz1zUfnzOsj2lKr/cUgC03NETYIbSZoyLeC9Sc+OCZH9wL0DdklLnvopoFx/v7aTqVjamw==",
+      "path": "google.apis.auth/1.45.0",
+      "hashPath": "google.apis.auth.1.45.0.nupkg.sha512"
+    },
+    "Google.Apis.Core/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hYqI4v3kEIfWxiYierMo59XCAOFBoH30RqCzomSubK9JXGAv/o0Cp+gxEeAH9GspxQcZNZV50ouu/8Ypigd7fw==",
+      "path": "google.apis.core/1.45.0",
+      "hashPath": "google.apis.core.1.45.0.nupkg.sha512"
+    },
+    "Google.Apis.Drive.v2/1.45.0.1895": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-z9E3jFviOlCcf9lHUWDvJLYkmFSWtXKbe5p/CCnyya6Whl9Qx/lLJBSBFOSVf8nic8QX5oVe2VRaBa5bNweH9Q==",
+      "path": "google.apis.drive.v2/1.45.0.1895",
+      "hashPath": "google.apis.drive.v2.1.45.0.1895.nupkg.sha512"
+    },
+    "Google.Apis.Drive.v3/1.45.0.1895": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mpm+qCoj5ooemnn5spGZOeUtgZAOlqQm/HlI5Z3ordKC9zVFrV4AZA+ejIIq/BYyip10hAIyiTxtiYBbGaEfg==",
+      "path": "google.apis.drive.v3/1.45.0.1895",
+      "hashPath": "google.apis.drive.v3.1.45.0.1895.nupkg.sha512"
     },
     "JavaScriptEngineSwitcher.ChakraCore/3.4.4": {
       "type": "package",

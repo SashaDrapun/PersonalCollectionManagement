@@ -33,7 +33,7 @@ namespace PersonalCollectionManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             SetViewBag();
             return View();
@@ -255,9 +255,10 @@ namespace PersonalCollectionManagement.Controllers
         [NonAction]
         public bool SetViewBag()
         {
+            string value = HttpContext.Request.Cookies["Theme"];
             ViewBag.Bg = "dark";
             ViewBag.Text = "light";
-            if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Theme != "Dark")
+            if (value != "dark")
             {
                 ViewBag.Bg = "light";
                 ViewBag.Text = "dark";

@@ -19,26 +19,20 @@ namespace PersonalCollectionManagement.Controllers
             db = applicationContext;
         }
 
-        public async Task<IActionResult> ChangeLanguage(string idUser,string language)
+        public IActionResult ChangeLanguage(string language)
         {
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
-            User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
-
-            user.Language = language;
-            await db.SaveChangesAsync();
             return RedirectToAction("UserSettings", "Home");
         }
 
-        public async Task<IActionResult> ChangeTheme(string idUser, string theme)
+        public IActionResult ChangeTheme(string theme)
         {
-            User user = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
-
-            user.Theme = theme;
-            await db.SaveChangesAsync();
+            HttpContext.Response.Cookies.Append("Theme", theme,
+                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
             return RedirectToAction("UserSettings", "Home");
         }
     }

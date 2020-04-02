@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using PersonalCollectionManagement.Models;
 using PersonalCollectionManagement.ViewModels;
 
@@ -58,11 +56,11 @@ namespace PersonalCollectionManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadFiles(IEnumerable<IFormFile> files)
+        public IActionResult UploadFiles(IEnumerable<IFormFile> file)
         {
-            foreach(var file in files)
+            foreach(var oneFile in file)
             {
-                string filePath = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                string filePath = Guid.NewGuid() + Path.GetExtension(oneFile.FileName);
                 
             }
             return Json("Good");
@@ -259,10 +257,30 @@ namespace PersonalCollectionManagement.Controllers
 
             if (act == "search")
             {                
-                searchValue = "%" + searchValue + "%";
+                return View(Search(searchValue));
+            }
+            else
+            {
+                List<Item> allSearchedItems = items.Where(item => item.FormattedTegs.Contains(searchValue)).ToList();
+                return View(allSearchedItems);
+            }
+        }
 
-                Task<List<int>>[] tasks = new Task<List<int>>[5]
-                {
+        public async Task<IActionResult> UserSettings()
+        {
+            ViewBag.Language = GetCulture();
+            await SetViewBag();
+            return View();
+        }
+
+        [NonAction]
+        public List<Item> Search(string searchValue)
+        {
+            List<Item> items = db.Items.ToList();
+            searchValue = "%" + searchValue + "%";
+
+            Task<List<int>>[] tasks = new Task<List<int>>[5]
+            {
                 new Task<List<int>>(() =>
                 {
                 return items.Where(x => EF.Functions.Like(x.Name, searchValue)).Select(item => item.Id).ToList();
@@ -285,39 +303,24 @@ namespace PersonalCollectionManagement.Controllers
                 {
                     return db.Comments.Where(x => EF.Functions.Like(x.Text, searchValue)).Select(comment => comment.ItemId).ToList();
                 })
-                };
+            };
 
-                foreach (var t in tasks)
-                {
-                    t.Start();
-                }
-
-
-                Task.WaitAll(tasks);
-
-                List<int> allSearchedItemsId = tasks[0].Result.
-                     Union(tasks[1].Result.
-                     Union(tasks[2].Result.
-                     Union(tasks[3].Result.
-                     Union(tasks[4].Result)))).ToList();
-
-                List<Item> allSearchedItems = items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
-
-                return View(allSearchedItems);
-            }
-            else
+            foreach (var t in tasks)
             {
-                List<Item> allSearchedItems = items.Where(item => item.FormattedTegs.Contains(searchValue)).ToList();
-                return View(allSearchedItems);
+                t.Start();
             }
-        }
 
-        public async Task<IActionResult> UserSettings()
-        {
-            await SetViewBag();
-            return View();
-        }
 
+            Task.WaitAll(tasks);
+
+            List<int> allSearchedItemsId = tasks[0].Result.
+                 Union(tasks[1].Result.
+                 Union(tasks[2].Result.
+                 Union(tasks[3].Result.
+                 Union(tasks[4].Result)))).ToList();
+
+            return items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
+        }
 
         [NonAction]
         public async Task<User> GetAutorizeUser()
@@ -326,13 +329,25 @@ namespace PersonalCollectionManagement.Controllers
             return await db.Users.FirstOrDefaultAsync(u => u.Email == emailAutorizeUser);
         }
 
+        public string GetCulture(string code = "")
+        {
+            if (!String.IsNullOrEmpty(code))
+            {
+                CultureInfo.CurrentCulture = new CultureInfo(code);
+                CultureInfo.CurrentUICulture = new CultureInfo(code);
+            }
+            return CultureInfo.CurrentCulture.Name;
+        }
+
         [NonAction]
         public async Task<bool> SetViewBag()
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
+            string value = HttpContext.Request.Cookies["Theme"];
+            
             ViewBag.Bg = "dark";
             ViewBag.Text = "light";
-            if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.Theme != "Dark")
+            if (value != "dark")
             {
                 ViewBag.Bg = "light";
                 ViewBag.Text = "dark";

@@ -3,13 +3,14 @@
 @{
     ViewData["Title"] = Localizer["Settings"];
 }
+
 <div class="m-3">
     <h2 class="text-@ViewBag.Text">@Localizer["ProfileSettings"]</h2>
 
-    <form asp-controller="Settings" asp-action="ChangeLanguage" asp-route-idUser="@ViewBag.AutorizeUser.Id">
+    <form asp-controller="Settings" asp-action="ChangeLanguage">
         <p class="text-@ViewBag.Text">@Localizer["ChooseLanguage"]</p>
         <select class="text-@ViewBag.Text bg-@ViewBag.Bg languageSelect">
-            @if (ViewBag.AutorizeUser.Language == "ru")
+            @if (ViewBag.Language == "ru")
             {
                 <option selected>@Localizer["Russian"]</option>
                 <option>@Localizer["English"]</option>
@@ -24,12 +25,12 @@
         <input class="d-none"
                name="language"
                id="languageValue"
-               value="@ViewBag.AutorizeUser.Language">
+               value="@ViewBag.Language">
 
         <button type="submit" class="btn btn-primary">@Localizer["SaveChanges"]</button>
     </form>
 
-    <form asp-controller="Settings" asp-action="ChangeTheme" asp-route-idUser="@ViewBag.AutorizeUser.Id">
+    <form asp-controller="Settings" asp-action="ChangeTheme">
         <p class="text-@ViewBag.Text">@Localizer["ChooseATopic"]</p>
         <select class="text-@ViewBag.Text bg-@ViewBag.Bg themeSelect">
             @if (ViewBag.Bg == "dark")
@@ -46,7 +47,7 @@
         </select>
         <input class="d-none"
                name="theme"
-               value="@ViewBag.AutorizeUser.Theme"
+               value="@ViewBag.Bg"
                id="ThemeValue">
         <button type="submit" class="btn btn-primary">@Localizer["SaveChanges"]</button>
     </form>

@@ -6,7 +6,8 @@
     ViewData["CurrentPage"] = "Users";
 }
 
-<table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
+
+<table id="usersTable" class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
     <thead>
         <tr>
             <th scope="col">@Localizer["Nickname"]</th>
@@ -126,4 +127,6 @@
         </div>
     </div>
 </div>
+
+
 <script src="~/js/Users.js"></script>

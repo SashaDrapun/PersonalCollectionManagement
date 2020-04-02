@@ -9,7 +9,7 @@
     }
     else
     {
-        ViewData["Title"] = Localizer["UserPage"] + " "+ ViewBag.OwnerCollections.Nickname;
+        ViewData["Title"] = Localizer["UserPage"].Value + " "+ ViewBag.OwnerCollections.Nickname;
     }
 
     ViewBag.FullAccess = false;
@@ -22,13 +22,22 @@
     }
 }
 
+<p id="FieldName" class="d-none">@Localizer["FieldName"]</p>
+<p id="FieldType" class="d-none">@Localizer["FieldType"]</p>
+<p id="DeleteField" class="d-none">@Localizer["DeleteField"]</p>
+<p id="Numerical" class="d-none">@Localizer["Numerical"]</p>
+<p id="String" class="d-none">@Localizer["String"]</p>
+<p id="Text" class="d-none">@Localizer["Text"]</p>
+<p id="Date" class="d-none">@Localizer["Date"]</p>
+<p id="Logical" class="d-none">@Localizer["Logical"]</p>
+
 @if (Model.Count == 0)
 {
     <h5 class="text-info m-2">@Localizer["CollectionListIsEmpty"]</h5>
 }
 else
 {
-    <h5 class="text-info m-2">Список коллекций</h5>
+<h5 class="text-info m-2">@Localizer["CollectionList"]</h5>
     <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg">
         <thead>
             <tr>
@@ -49,7 +58,7 @@ else
             {
                 <tr>
                     <th scope="row">@collection.Name</th>
-                    <td>@collection.Description</td>
+                    <td>@collection.MarkdownDescription</td>
                     <td>@collection.Image</td>
                     @if (ViewBag.FullAccess)
                     {
@@ -74,7 +83,7 @@ else
 
                     <td>
                         <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
-                            <button class="btn btn-primary" collectionId="@collection.Id">Перейти</button>
+                            <button class="btn btn-primary" collectionId="@collection.Id">@Localizer["GoTo"]</button>
                         </form>
                     </td>
                 </tr>
@@ -95,10 +104,15 @@ else
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
+                    <form asp-controller="Home" asp-action="UploadFiles" id="myAwesomeDropzone" class="dropzone dz-clickable">
+                        <div class="dz-default dz-message">
+                            <button class="dz-button" type="button">Drop files here to upload</button>
+                        </div>
+                    </form>
                     <form name="loginForm" method="post">
                         <input type="text" name="nicknameUser" class="d-none" value="@ViewBag.OwnerCollections.Nickname">
                         <div class="form-group">
-                            <label for="nameCollection">@Localizer["CreateCollection"]</label>
+                            <label for="nameCollection">@Localizer["CollectionName"]</label>
                             <input type="text" name="nameCollection" class="form-control" id="nameCollection"
                                    placeholder="@Localizer["CollectionName"]">
                         </div>

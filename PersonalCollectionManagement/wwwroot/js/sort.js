@@ -1,6 +1,6 @@
 ﻿function sortTable(n) {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("sortedTable");
+    table = document.getElementById("filter-table");
     switching = true;
     // Установить направление сортировки по возрастанию:
     dir = "asc";
@@ -12,7 +12,7 @@
         rows = table.rows;
         /* Перебрать все строки таблицы (кроме
                первый, который содержит заголовки таблицы): */
-        for (i = 1; i < (rows.length - 1); i++) {
+        for (i = 2; i < (rows.length - 1); i++) {
             // Начнем с того, что не должно быть переключения:
             shouldSwitch = false;
             /* Получить два элемента, которые вы хотите сравнить,

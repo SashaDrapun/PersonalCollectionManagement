@@ -137,6 +137,10 @@
     <value>Коллекция</value>
     <comment>Коллекция</comment>
   </data>
+  <data name="CollectionDescription" xml:space="preserve">
+    <value>Описание коллекции</value>
+    <comment>Описание коллекции</comment>
+  </data>
   <data name="CollectionIsEmpty" xml:space="preserve">
     <value>В коллекции пока нет элементов</value>
     <comment>В коллекции пока нет элементов</comment>

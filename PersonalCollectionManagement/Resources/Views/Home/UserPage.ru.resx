@@ -153,6 +153,10 @@
     <value>Создать коллекцию</value>
     <comment>Создать коллекцию</comment>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+    <comment>Дата</comment>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>
     <comment>Удалить</comment>
@@ -160,6 +164,10 @@
   <data name="DeleteCollection" xml:space="preserve">
     <value>Удаление коллекции</value>
     <comment>Удаление коллекции</comment>
+  </data>
+  <data name="DeleteField" xml:space="preserve">
+    <value>Удалить поле</value>
+    <comment>Удалить поле</comment>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
@@ -169,6 +177,14 @@
     <value>Изменение коллекции</value>
     <comment>Изменение коллекции</comment>
   </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Название поля</value>
+    <comment>Название поля</comment>
+  </data>
+  <data name="FieldType" xml:space="preserve">
+    <value>Тип поля</value>
+    <comment>Тип поля</comment>
+  </data>
   <data name="GoTo" xml:space="preserve">
     <value>Перейти к коллекции</value>
     <comment>Перейти</comment>
@@ -177,9 +193,17 @@
     <value>Перейти к настройкам</value>
     <comment>Перейти к настройкам</comment>
   </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Логический</value>
+    <comment>Логический</comment>
+  </data>
   <data name="MyPage" xml:space="preserve">
     <value>Моя страница</value>
     <comment>Моя страница</comment>
+  </data>
+  <data name="Numerical" xml:space="preserve">
+    <value>Числовой</value>
+    <comment>Числовой</comment>
   </data>
   <data name="Picture" xml:space="preserve">
     <value>Картинка</value>
@@ -188,6 +212,14 @@
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
     <comment>Сохранить</comment>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value>Строковый</value>
+    <comment>Строковый</comment>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Текстовый</value>
+    <comment>Текстовый</comment>
   </data>
   <data name="UserPage" xml:space="preserve">
     <value>Страница пользователя</value>

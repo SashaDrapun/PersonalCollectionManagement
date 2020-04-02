@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="~/css/jquery-ui.theme.css">
 
 <div class="text-@ViewBag.Text m-2">
-    <h5>Описание коллекции</h5>
+    <h5>@Localizer["CollectionDescription"]</h5>
     @Model[0].Collection.MarkdownDescription
 </div>
 
@@ -29,11 +29,11 @@
 else
 {
     <h5 class="text-info m-2">@Localizer["ListOfCollectionItems"]</h5>
-    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg" id="sortedTable">
+    <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg" id="filter-table">
         <thead>
             <tr>
                 <th scope="col" onclick='sortTable(0)'>@Localizer["ItemName"]</th>
-                <th scope="col">#@Localizer["Tegs"]</th>
+                <th scope="col" onclick='sortTable(1)'>#@Localizer["Tegs"]</th>
                 @for (int i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                 {
                     <th scope="col" onclick='sortTable(@i+2)'>@Model[0].Collection.FormattedFields[i].Name</th>
@@ -46,69 +46,77 @@ else
                 }
 
                 <th scope="col">@Localizer["GoOver"]</th>
-
             </tr>
         </thead>
         <tbody>
+            <tr class='table-filters'>
+                @for (var i = 0; i < Model[0].Collection.FormattedFields.Count + 2; i++)
+                {
+                    <td>
+                        <input type="text" />
+                    </td>
+                }
+            </tr>
+
             @foreach (var item in Model)
             {
-            <tr>
-                <th scope="row">@item.Name</th>
-                <th scope="row">@item.Tegs</th>
+                <tr class="table-data">
+                    <td>@item.Name</td>
+                    <td>@item.Tegs</td>
 
-                @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
-                {
-                    var field = Model[0].Collection.FormattedFields[i];
-
-                    if (field.Type == "Текстовый")
+                    @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
                     {
-                        <th scope="row">@item.MarkdownFormattedValues[i]</th>
-                    }
+                        var field = Model[0].Collection.FormattedFields[i];
 
-                    if (field.Type == "Логический")
-                    {
-                        @if (@item.FormattedValues[i] == "on")
+                        if (field.Type == "Текстовый")
                         {
-                            <th scope="row"><input type="checkbox" disabled checked></th>
+                            <td>@item.MarkdownFormattedValues[i]</td>
                         }
-                        else
+
+                        if (field.Type == "Логический")
                         {
-                            <th scope="row"><input type="checkbox" disabled></th>
+                            @if (@item.FormattedValues[i] == "on")
+                            {
+                                <td><input type="checkbox" disabled checked></td>
+                            }
+                            else
+                            {
+                                <td><input type="checkbox" disabled></td>
+                            }
+                        }
+
+                        if (field.Type != "Текстовый" && field.Type != "Логический")
+                        {
+                            <td>@item.FormattedValues[i]</td>
                         }
                     }
-
-                    if (field.Type != "Текстовый" && field.Type != "Логический")
+                    @if (ViewBag.FullAccess)
                     {
-                        <th scope="row">@item.FormattedValues[i]</th>
+                        <td>
+                            <button class="btn btn-danger editItem"
+                                    idItem="@item.Id"
+                                    valuesItem="@item.Values"
+                                    nameItem="@item.Name"
+                                    tegsItem="@item.Tegs"
+                                    data-toggle="modal" data-target="#editItem">
+                                @Localizer["Edit"]
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger deleteItem"
+                                    idItem="@item.Id"
+                                    data-toggle="modal" data-target="#deleteItem">
+                                @Localizer["Delete"]
+                            </button>
+                        </td>
                     }
-                }
-                @if (ViewBag.FullAccess)
-                {
-                    <td>
-                        <button class="btn btn-danger editItem"
-                                idItem="@item.Id"
-                                valuesItem="@item.Values"
-                                nameItem="@item.Name"
-                                tegsItem="@item.Tegs"
-                                data-toggle="modal" data-target="#editItem">
-                            @Localizer["Edit"]
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger deleteItem"
-                                idItem="@item.Id"
-                                data-toggle="modal" data-target="#deleteItem">
-                            @Localizer["Delete"]
-                        </button>
-                    </td>
-                }
 
-                <td>
-                    <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
-                        <button class="btn btn-primary">@Localizer["GoOver"]</button>
-                    </form>
-                </td>
-            </tr>
+                    <td>
+                        <form asp-controller="Home" asp-action="Item" asp-route-id="@item.Id">
+                            <button class="btn btn-primary">@Localizer["GoOver"]</button>
+                        </form>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -294,7 +302,6 @@ else
     <button class="btn btn-primary m-2" data-toggle="modal" data-target="#createItem">@Localizer["AddItem"]</button>
 }
 
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="~/js/sort.js"></script>
 <script src="~/js/jquery-ui.min.js"></script>
 <script src="~/js/Collection.js"></script>

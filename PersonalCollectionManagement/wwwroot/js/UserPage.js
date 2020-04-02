@@ -33,40 +33,35 @@ function createField(node,nameField, typeField,fullEdit) {
         field.className = 'fieldContainer';
             field.innerHTML = `<div class="row">
                                     <div class="col-4">
-                                        <label>Название поля</label>
+                                        <label>${document.querySelector('#FieldName').textContent}</label>
                                     </div>
                                     <div class="col-4">
-                                        <label>Тип поля</label>
+                                        <label>${document.querySelector('#FieldType').textContent}</label>
                                     </div>
                                     <div class="col-4">
                                         <button class="btn btn-danger delete-field 
                                         ${fullEdit == false ? 'd-none' : ''}"
-                                        onclick="deleteField(event)">Удалить поле</button>
+                                        onclick="deleteField(event)">${document.querySelector('#DeleteField').textContent}
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-4">
                                         <input type="text" name="nameField" class="form-control"
-                                               value="${nameField !== undefined ? nameField:''}" placeholder="Название">
+                                               value="${nameField !== undefined ? nameField : ''}" 
+                                                placeholder="${document.querySelector('#FieldName').textContent}">
                                     </div>
                                     <div class="col-4">
                                         <select name="typeField" ${fullEdit == false ? 'disabled' : ''}>
-                                            <option ${typeField === 'Числовой' ? 'selected' :''}>Числовой</option>
-                                            <option ${typeField === 'Строковый' ? 'selected' : ''}>Строковый</option>
-                                            <option ${typeField === 'Текстовый' ? 'selected' : ''}>Текстовый</option>
-                                            <option ${typeField === 'Дата' ? 'selected' : ''}>Дата</option>
-                                            <option ${typeField === 'Логический' ? 'selected' : ''}>Логический</option>
+                                            <option ${typeField === 'Числовой' ? 'selected' : ''}>${document.querySelector('#Numerical').textContent}</option>
+                                            <option ${typeField === 'Строковый' ? 'selected' : ''}>${document.querySelector('#String').textContent}</option>
+                                            <option ${typeField === 'Текстовый' ? 'selected' : ''}>${document.querySelector('#Text').textContent}</option>
+                                            <option ${typeField === 'Дата' ? 'selected' : ''}>${document.querySelector('#Date').textContent}</option>
+                                            <option ${typeField === 'Логический' ? 'selected' : ''}>${document.querySelector('#Logical').textContent}</option>
                                         </select>
                                     </div>
                                 </div>`;
         node.before(field);
-}
-
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 const buttonsDelete = document.querySelectorAll('.deleteCollection');
@@ -109,7 +104,6 @@ for (let i = 0; i < buttonsEdit.length; i++) {
                 let field = fields[i].split(',');
                 createField(buttonCreateFieldEdit, field[0], field[1], fullEdit);
             }
-        }
-        
+        }  
     });
 }

@@ -3,7 +3,7 @@
 @{
     @model PersonalCollectionManagement.Models.Item
 
-    ViewData["Title"] = Localizer["Element"] + " " + Model.Name;
+    ViewData["Title"] = Localizer["Element"].Value + " " + Model.Name;
 }
 
 <p class="d-none" id="isUserLike">@ViewBag.IsUserLike</p>
