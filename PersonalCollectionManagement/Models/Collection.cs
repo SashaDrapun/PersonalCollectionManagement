@@ -14,7 +14,7 @@ namespace PersonalCollectionManagement.Models
         {
             Name = name;
             Description = description;
-            Image = "path";
+            Image = "Collection/Comment.png/";
         }
 
         [Key]

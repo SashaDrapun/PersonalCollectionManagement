@@ -193,6 +193,10 @@
     <value>Перейти к настройкам</value>
     <comment>Перейти к настройкам</comment>
   </data>
+  <data name="LoadPicture" xml:space="preserve">
+    <value>Загрузить картинку</value>
+    <comment>Загрузить картинку</comment>
+  </data>
   <data name="Logical" xml:space="preserve">
     <value>Логический</value>
     <comment>Логический</comment>

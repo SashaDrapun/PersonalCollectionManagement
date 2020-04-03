@@ -59,7 +59,7 @@ else
                 <tr>
                     <th scope="row">@collection.Name</th>
                     <td>@collection.MarkdownDescription</td>
-                    <td>@collection.Image</td>
+                    <td><img class="inTable" src="@Url.Content(collection.Image)"></td>
                     @if (ViewBag.FullAccess)
                     {
                         <td>
@@ -104,22 +104,21 @@ else
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form asp-controller="Home" asp-action="UploadFiles" id="myAwesomeDropzone" class="dropzone dz-clickable">
-                        <div class="dz-default dz-message">
-                            <button class="dz-button" type="button">Drop files here to upload</button>
-                        </div>
-                    </form>
-                    <form name="loginForm" method="post">
+                    <form name="loginForm" method="post" enctype="multipart/form-data">
                         <input type="text" name="nicknameUser" class="d-none" value="@ViewBag.OwnerCollections.Nickname">
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["CollectionName"]</label>
                             <input type="text" name="nameCollection" class="form-control" id="nameCollection"
-                                   placeholder="@Localizer["CollectionName"]">
+                                   placeholder="@Localizer["CollectionName"]" required oninvalid="this.setCustomValidity('Wow!')">
                         </div>
 
                         <label for="description">@Localizer["CollectionDescription"]</label>
                         <div class="form-group">
                             <textarea id="description" rows="3" cols="35" name="description"></textarea>
+                        </div>
+                        <label for="description">@Localizer["LoadPicture"]</label>
+                        <div class="form-group">
+                            <input type="file" name="uploadedFile" accept="image/*"/>
                         </div>
                         <button class="btn btn-primary m-2 createField">@Localizer["AddField"]</button>
                         <button asp-controller="Home" asp-action="CreateCollection"

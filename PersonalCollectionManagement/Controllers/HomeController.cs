@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ namespace PersonalCollectionManagement.Controllers
     public class HomeController : Controller
     {
         private ApplicationContext db;
+        private IWebHostEnvironment appEnvironment;
 
-        public HomeController(ApplicationContext applicationContext)
+        public HomeController(ApplicationContext applicationContext, IWebHostEnvironment appEnvironment)
         {
             db = applicationContext;
+            this.appEnvironment = appEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -55,17 +58,6 @@ namespace PersonalCollectionManagement.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult UploadFiles(IEnumerable<IFormFile> file)
-        {
-            foreach(var oneFile in file)
-            {
-                string filePath = Guid.NewGuid() + Path.GetExtension(oneFile.FileName);
-                
-            }
-            return Json("Good");
-        }
-
         public async Task<IActionResult> UserPage(string idUser)
         {
             await SetViewBag();
@@ -85,11 +77,18 @@ namespace PersonalCollectionManagement.Controllers
 
         #region Collection
         [HttpPost]
-        public async Task<IActionResult> CreateCollection(CollectionModel collectionModel)
+        public async Task<IActionResult> CreateCollection(CollectionModel collectionModel, IFormFile uploadedFile)
         {
             
             List<Field> fields = new List<Field>();
 
+            string path = "/img/Collections/" + uploadedFile.FileName;
+            // сохраняем файл в папку Files в каталоге wwwroot
+            using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
+            {
+                await uploadedFile.CopyToAsync(fileStream);
+            }
+            
             if (collectionModel.NameField != null)
             {
                 for (int i = 0; i < collectionModel.NameField.Count; i++)
@@ -104,7 +103,8 @@ namespace PersonalCollectionManagement.Controllers
             {
                 User = ownerCollection,
                 UserId = ownerCollection.Id,
-                FormattedFields = fields
+                FormattedFields = fields,
+                Image = path
             };
 
             db.Collections.Add(collection);
@@ -211,7 +211,7 @@ namespace PersonalCollectionManagement.Controllers
         }
         #endregion
 
-        public async Task<IActionResult> UsersAsync()
+        public async Task<IActionResult> Users()
         {
             await SetViewBag();
             return View(db.Users.ToList());
