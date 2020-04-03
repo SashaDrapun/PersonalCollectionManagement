@@ -1,0 +1,7 @@
+{
+  "lengthMenu": "Отображать _MENU_ записей на странице",
+  "zeroRecords": "Ничего не найдено",
+  "info": "Показана страница № _PAGE_ из _PAGES_",
+  "infoEmpty": "Нет подходящих записей",
+  "infoFiltered": "(отфильтрофано из _MAX_ total records)"
+}

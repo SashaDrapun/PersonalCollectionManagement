@@ -35,6 +35,12 @@
 
 </head>
 <body class="bg-@(ViewBag.Bg) p-2">
+    <p id="LengthMenu" class="d-none">@Localizer["LengthMenu"]</p>
+    <p id="ZeroRecords" class="d-none">@Localizer["ZeroRecords"]</p>
+    <p id="Info" class="d-none">@Localizer["Info"]</p>
+    <p id="InfoEmpty" class="d-none">@Localizer["InfoEmpty"]</p>
+    <p id="InfoFiltered" class="d-none">@Localizer["InfoFiltered"]</p>
+    <p id="Search" class="d-none">@Localizer["Search"]</p>
 
     <div id="content"></div>
     <nav class="navbar navbar-expand-lg navbar-@(ViewBag.Bg) bg-@(ViewBag.Bg)">
@@ -95,6 +101,7 @@
     <script src="~/js/dropzone.js"></script>
     <script src="~/js/DropzoneConfiguration.js"></script>
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/Main.js"></script>
     @RenderBody()
 
 </body>

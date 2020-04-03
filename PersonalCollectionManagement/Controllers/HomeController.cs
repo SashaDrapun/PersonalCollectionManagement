@@ -329,6 +329,7 @@ namespace PersonalCollectionManagement.Controllers
             return await db.Users.FirstOrDefaultAsync(u => u.Email == emailAutorizeUser);
         }
 
+        [NonAction]
         public string GetCulture(string code = "")
         {
             if (!String.IsNullOrEmpty(code))

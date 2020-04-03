@@ -129,6 +129,22 @@
     <value>Exit</value>
     <comment>Выход</comment>
   </data>
+  <data name="Info" xml:space="preserve">
+    <value>Showing page _PAGE_ of _PAGES_</value>
+    <comment>Showing page _PAGE_ of _PAGES_</comment>
+  </data>
+  <data name="InfoEmpty" xml:space="preserve">
+    <value>No records available</value>
+    <comment>No records available</comment>
+  </data>
+  <data name="InfoFiltered" xml:space="preserve">
+    <value>(filtered from _MAX_ total records)</value>
+    <comment>(filtered from _MAX_ total records)</comment>
+  </data>
+  <data name="LengthMenu" xml:space="preserve">
+    <value>Display _MENU_ records per page</value>
+    <comment>Display _MENU_ records per page</comment>
+  </data>
   <data name="Main" xml:space="preserve">
     <value>Main</value>
     <comment>Главная</comment>
@@ -148,5 +164,9 @@
   <data name="Users" xml:space="preserve">
     <value>Users</value>
     <comment>Пользователи</comment>
+  </data>
+  <data name="ZeroRecords" xml:space="preserve">
+    <value>Nothing found - sorry</value>
+    <comment>Nothing found - sorry</comment>
   </data>
 </root>
