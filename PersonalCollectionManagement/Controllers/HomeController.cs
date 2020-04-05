@@ -27,7 +27,7 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Index()
         {
             await SetViewBag();
-            ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Collection).Take(5).ToList();
+            ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Id).Take(5).ToList();
 
             List<Collection> collections = db.Collections.ToList();
 

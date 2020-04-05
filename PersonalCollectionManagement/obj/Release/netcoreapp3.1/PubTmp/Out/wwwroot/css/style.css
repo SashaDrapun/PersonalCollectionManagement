@@ -1,0 +1,19 @@
+﻿
+
+.nav-item.buttonContainer {
+    display: none;
+}
+
+textarea{
+    resize: none;
+}
+
+img{
+    height:30px;
+    width:30px;
+}
+
+.inTable {
+    height: 100px;
+    width: 200px;
+}
