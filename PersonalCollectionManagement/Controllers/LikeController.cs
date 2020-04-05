@@ -43,6 +43,6 @@ namespace PersonalCollectionManagement.Controllers
             db.Likes.Remove(like);
             await db.SaveChangesAsync();
             return Ok();
-        }
+        }\
     }
 }

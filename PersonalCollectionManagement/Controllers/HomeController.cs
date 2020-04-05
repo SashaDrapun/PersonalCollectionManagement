@@ -81,13 +81,17 @@ namespace PersonalCollectionManagement.Controllers
         {
             
             List<Field> fields = new List<Field>();
-
-            string path = "/img/Collections/" + uploadedFile.FileName;
-            // сохраняем файл в папку Files в каталоге wwwroot
-            using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
+            string path = "none";
+            if(uploadedFile != null)
             {
-                await uploadedFile.CopyToAsync(fileStream);
+                path = "/img/Collections/" + uploadedFile.FileName;
+                // сохраняем файл в папку Files в каталоге wwwroot
+                using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
             }
+            
             
             if (collectionModel.NameField != null)
             {

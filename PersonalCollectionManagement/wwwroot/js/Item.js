@@ -107,7 +107,7 @@ hubConnection.on('Send', function (message, userNickname, idItem, dateTime) {
         </div>
     </div>`;
         document.querySelector('#formCommentModal').appendChild(comment);
-    }   
+    }
 });
 
 

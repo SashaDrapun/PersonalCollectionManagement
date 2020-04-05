@@ -56,37 +56,45 @@ else
         <tbody>
             @foreach (var collection in Model)
             {
-                <tr>
-                    <th scope="row">@collection.Name</th>
-                    <td>@collection.MarkdownDescription</td>
+            <tr>
+                <th scope="row">@collection.Name</th>
+                <td>@collection.MarkdownDescription</td>
+                @if (collection.Image != "none")
+                {
                     <td><img class="inTable" src="@Url.Content(collection.Image)"></td>
-                    @if (ViewBag.FullAccess)
-                    {
-                        <td>
-                            <button class="btn btn-danger editCollection"
-                                    collectionId="@collection.Id"
-                                    collectionFields="@collection.Fields"
-                                    collectionName="@collection.Name"
-                                    collectionDescription="@collection.Description"
-                                    data-toggle="modal" data-target="#editCollection">
-                                @Localizer["Edit"]
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger deleteCollection"
-                                    collectionId="@collection.Id"
-                                    data-toggle="modal" data-target="#deleteCollection">
-                                @Localizer["Delete"]
-                            </button>
-                        </td>
-                    }
+                }
+                else
+                {
+                    <td></td>
+                }
 
+                @if (ViewBag.FullAccess)
+                {
                     <td>
-                        <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
-                            <button class="btn btn-primary" collectionId="@collection.Id">@Localizer["GoTo"]</button>
-                        </form>
+                        <button class="btn btn-danger editCollection"
+                                collectionId="@collection.Id"
+                                collectionFields="@collection.Fields"
+                                collectionName="@collection.Name"
+                                collectionDescription="@collection.Description"
+                                data-toggle="modal" data-target="#editCollection">
+                            @Localizer["Edit"]
+                        </button>
                     </td>
-                </tr>
+                    <td>
+                        <button class="btn btn-danger deleteCollection"
+                                collectionId="@collection.Id"
+                                data-toggle="modal" data-target="#deleteCollection">
+                            @Localizer["Delete"]
+                        </button>
+                    </td>
+                }
+
+                <td>
+                    <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@collection.Id">
+                        <button class="btn btn-primary" collectionId="@collection.Id">@Localizer["GoTo"]</button>
+                    </form>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -109,7 +117,7 @@ else
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["CollectionName"]</label>
                             <input type="text" name="nameCollection" class="form-control" id="nameCollection"
-                                   placeholder="@Localizer["CollectionName"]" required oninvalid="this.setCustomValidity('Wow!')">
+                                   placeholder="@Localizer["CollectionName"]">
                         </div>
 
                         <label for="description">@Localizer["CollectionDescription"]</label>
@@ -118,7 +126,9 @@ else
                         </div>
                         <label for="description">@Localizer["LoadPicture"]</label>
                         <div class="form-group">
-                            <input type="file" name="uploadedFile" accept="image/*"/>
+                            <input type="file" 
+                                   name="uploadedFile"
+                                   accept="image/*"/>
                         </div>
                         <button class="btn btn-primary m-2 createField">@Localizer["AddField"]</button>
                         <button asp-controller="Home" asp-action="CreateCollection"
