@@ -25,14 +25,16 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr>
-                <th scope="row">
-                    @user.Nickname
-                </th>
-                <td>@user.DateRegistration</td>
-                <td>@user.DateLastLogin</td>
+        <tr>
+            <th scope="row">
+                @user.Nickname
+            </th>
+            <td>@user.DateRegistration</td>
+            <td>@user.DateLastLogin</td>
 
-                @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.IsAdmin)
+            @if (ViewBag.AutorizeUser != null && ViewBag.AutorizeUser.IsAdmin)
+            {
+                @if(!user.IsAdmin || ViewBag.AutorizeUser.Nickname == "Nagibator3000")
                 {
                     <td>
                         <form asp-controller="Users" asp-action="ChangeStatus" asp-route-idUser="@user.Id">
@@ -41,43 +43,43 @@
                             </button>
                         </form>
                     </td>
-
-                    @if (!user.IsAdmin)
-                    {
-                        <td>
-                            <button class="btn btn-danger deleteUser"
-                                    idUser="@user.Id"
-                                    data-toggle="modal" data-target="#deleteUser">
-                                @Localizer["Delete"]
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger setAdmin"
-                                    idUser="@user.Id"
-                                    data-toggle="modal" data-target="#setAdmin">
-                                @Localizer["SetAsAdministrator"]
-                            </button>
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            <p class="text-info">@Localizer["Admin"]</p>
-                        </td>
-                        <td>
-                            <p class="text-info">@Localizer["Admin"]</p>
-                        </td>
-                    }
-                }
-
-                <td>
-                    <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@user.Id">
-                        <button class="btn btn-primary">
-                            @Localizer["GoTo"]
+                    <td>
+                        <button class="btn btn-danger deleteUser"
+                                idUser="@user.Id"
+                                data-toggle="modal" data-target="#deleteUser">
+                            @Localizer["Delete"]
                         </button>
-                    </form>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger setAdmin"
+                                idUser="@user.Id"
+                                data-toggle="modal" data-target="#setAdmin">
+                            @Localizer["SetAsAdministrator"]
+                        </button>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <p class="text-info">@Localizer["Admin"]</p>
+                    </td>
+                    <td>
+                        <p class="text-info">@Localizer["Admin"]</p>
+                    </td>
+                    <td>
+                        <p class="text-info">@Localizer["Admin"]</p>
+                    </td>
+                }
+            }
+
+            <td>
+                <form asp-controller="Home" asp-action="UserPage" asp-route-idUser="@user.Id">
+                    <button class="btn btn-primary">
+                        @Localizer["GoTo"]
+                    </button>
+                </form>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

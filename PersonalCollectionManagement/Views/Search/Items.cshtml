@@ -26,7 +26,12 @@ else
             {
                 <tr>
                     <th scope="row">@item.Name</th>
-                    <td>@item.Tegs</td>
+                    <td>
+                        @foreach (var tag in item.Tags)
+                        {
+                            <a>#@tag</a>
+                        }
+                    </td>
 
                     <td>
                         <form asp-controller="Home" asp-action="Collection" asp-route-idCollection="@item.CollectionId">

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -9,51 +6,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionManagement.Models;
-using PersonalCollectionManagement.ViewModels;
+using PersonalCollectionManagement.Services;
 
 namespace PersonalCollectionManagement.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationContext db;
-        private IWebHostEnvironment appEnvironment;
-
         public HomeController(ApplicationContext applicationContext, IWebHostEnvironment appEnvironment)
         {
-            db = applicationContext;
-            this.appEnvironment = appEnvironment;
+            Database.SetDB(applicationContext);
+            AppInviroment.SetAppEnvironment(appEnvironment);
         }
 
         public async Task<IActionResult> Index()
         {
             await SetViewBag();
-            ViewBag.LastAddedItems = db.Items.OrderByDescending(x => x.Id).Take(5).ToList();
 
-            List<Collection> collections = db.Collections.ToList();
+            ViewBag.LastAddedItems = ItemHandler.GetLastAddedItems(5);
 
-            for (int i = 0; i < collections.Count; i++)
-            {
-                collections[i].CountItems = db.Items.
-                    Where(item => item.CollectionId == collections[i].Id).
-                    Count();
-            }
+            ViewBag.CollectionsWithMostOfItems = CollectionSearcher.GetCollectionsWithMostOfItems(5);
 
-            ViewBag.CollectionsWithMostOfItems = collections.OrderByDescending(x => x.CountItems).Take(5);
-
-            List<string> allTegs = new List<string>();
-
-            if (db.Items.Count() != 0)
-            {
-                foreach (var item in db.Items)
-                {
-                    foreach (var teg in item.FormattedTegs)
-                    {
-                        allTegs.Add(teg);
-                    }
-                }
-            }
-
-            ViewBag.AllTegs = allTegs.Distinct().ToList();
+            ViewBag.AllTegs = TagsHandler.GetTagsValues();
 
             return View();
         }
@@ -62,304 +35,67 @@ namespace PersonalCollectionManagement.Controllers
         {
             await SetViewBag();
 
-            User ownerCollections = await db.Users.FirstOrDefaultAsync(u => u.Id == idUser);
-            
-            List<Collection> collections = db.Collections.Where(x => x.UserId == ownerCollections.Id).ToList();
-            ViewBag.OwnerCollections = ownerCollections;
-            return View(collections);
+            ViewBag.OwnerCollections = UsersHandler.GetUser(idUser);
+
+            return View(CollectionSearcher.GetUserCollections(idUser));
         }
 
         public async Task<IActionResult> Collections()
         {
             await SetViewBag();
-            return View(db.Collections.ToList());
-        }
-
-        #region Collection
-        [HttpPost]
-        public async Task<IActionResult> CreateCollection(CollectionModel collectionModel, IFormFile uploadedFile)
-        {
-            
-            List<Field> fields = new List<Field>();
-            string path = "none";
-            if(uploadedFile != null)
-            {
-                path = "/img/Collections/" + uploadedFile.FileName;
-                // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-            }
-            
-            
-            if (collectionModel.NameField != null)
-            {
-                for (int i = 0; i < collectionModel.NameField.Count; i++)
-                {
-                    fields.Add(new Field(collectionModel.NameField[i], collectionModel.TypeField[i]));
-                }
-            }
-           
-            User ownerCollection = await db.Users.FirstOrDefaultAsync(u => u.Nickname == collectionModel.NicknameUser);
-
-            Collection collection = new Collection(collectionModel.NameCollection, collectionModel.Description)
-            {
-                User = ownerCollection,
-                UserId = ownerCollection.Id,
-                FormattedFields = fields,
-                Image = path
-            };
-
-            db.Collections.Add(collection);
-            await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { idUser = ownerCollection.Id });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteCollection(int idCollection)
-        {
-            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
-            User ownerUser = await db.Users.FirstOrDefaultAsync(u => u.Id == collection.UserId);
-            string ownerId = ownerUser.Id;
-            db.Remove(collection);
-            await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { idUser = ownerId });
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> EditCollection(CollectionModel collectionModel)
-        {
-            Collection oldCollection = await db.Collections.FirstOrDefaultAsync(x => x.Id == collectionModel.IdCollection);
-
-            oldCollection.Name = collectionModel.NameCollection;
-            oldCollection.Description = collectionModel.Description;
-
-            if(collectionModel.NameField != null)
-            {
-                if (oldCollection.FormattedFields.Count != collectionModel.NameField.Count)
-                {
-                    int countNewFields = collectionModel.TypeField.Count;
-                    int index = oldCollection.FormattedFields.Count;
-
-                    List<Field> fields = oldCollection.FormattedFields;
-                    for (int i = 0; i < countNewFields; i++)
-                    {
-                        fields.Add(new Field(collectionModel.NameField[index],
-                            collectionModel.TypeField[i]));
-                        index++;
-                    }
-
-                    oldCollection.FormattedFields = fields;
-
-                    List<Item> items = db.Items.Where(x => x.CollectionId == oldCollection.Id).ToList();
-
-                    for (int j = 0; j < items.Count; j++)
-                    {
-                        for (int i = 0; i < countNewFields; i++)
-                        {
-                            items[j].Values += ",";
-                        }
-                        db.Items.Update(items[j]);
-                    }
-                }
-                else
-                {
-                    List<Field> fields = new List<Field>();
-                    for (int i = 0; i < oldCollection.FormattedFields.Count; i++)
-                    {
-                        fields.Add(new Field(collectionModel.NameField[i], oldCollection.FormattedFields[i].Type));
-                    }
-
-                    oldCollection.FormattedFields = fields;
-                }
-            }
-           
-
-            User ownerUser = await db.Users.FirstOrDefaultAsync(u => u.Id == oldCollection.UserId);
-            string ownerId = ownerUser.Id;
-            db.Collections.Update(oldCollection);
-            await db.SaveChangesAsync();
-            return RedirectToAction("UserPage", "Home", new { idUser = ownerId });
+            return View(Database.db.Collections.ToList());
         }
 
         public async Task<IActionResult> Collection(int idCollection)
         {
             await SetViewBag();
-            
-            List<Item> items = db.Items.Where(x => x.CollectionId == idCollection).ToList();
 
-            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == idCollection);
+            ViewBag.Collection = CollectionSearcher.GetCollection(idCollection);
 
-            ViewBag.CollectionDescription = Markdown.ParseHtmlString(collection.Description);
-
-            if (items.Count == 0)
-            {
-                Item item = new Item
-                {
-                    CollectionId = collection.Id,
-                    Collection = collection,
-                    Id = 0
-                };
-
-                items.Add(item);
-            }
-            else
-            {
-                items[0].Collection = collection;
-            }
-
-            ViewBag.OwnerCollection = await db.Users.FirstOrDefaultAsync(x => x.Id == collection.UserId);
-            return View(items);
+            return View(ItemHandler.GetCollectionItems(idCollection));
         }
-        #endregion
 
         public async Task<IActionResult> Users()
         {
             await SetViewBag();
-            return View(db.Users.ToList());
+            return View(Database.db.Users.ToList());
         }
         public async Task<IActionResult> Item(int id)
         {
             await SetViewBag();
+
             User autorizeUser = await GetAutorizeUser();
-           
-            Item item = await db.Items.FirstOrDefaultAsync(x => x.Id == id);
-            Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == item.CollectionId);
-            ViewBag.Comments = db.Comments.Where(x => x.ItemId == id).OrderByDescending(x=>x.DateTime).ToList();
+            Item item = ItemHandler.GetItem(id);
+            ViewBag.Collection = CollectionSearcher.GetCollection(item.CollectionId);
+            ViewBag.Comments = CommentsHandler.GetComments(item.Id);
 
-            for (int i = 0; i < ViewBag.Comments.Count; i++)
-            {
-                string userId = ViewBag.Comments[i].UserId;
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-                ViewBag.Comments[i].User = user;
-            }
-
-
-            List<Like> likes = db.Likes.Where(x => x.ItemId == id).ToList();
-
+            List<Like> likes = LikesHandler.GetLikes(item.Id);
             ViewBag.CountLikes = likes.Count;
+            ViewBag.IsUserLike = LikesHandler.IsUserLike(autorizeUser, likes);
 
-            ViewBag.IsUserLike = autorizeUser == null ? false :
-                likes.FirstOrDefault(x => x.UserId == autorizeUser.Id) == null ? false : true;
-
-            item.Collection = collection;
             return View(item);
-        }
-
-        public async Task<IActionResult> Items(string act, string searchValue)
-        {
-            await SetViewBag();
-            List<Item> items = db.Items.ToList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                Collection collection = await db.Collections.FirstOrDefaultAsync(x => x.Id == items[i].CollectionId);
-                items[i].Collection = collection;
-            }
-
-            if (act == "search")
-            {                
-                return View(Search(searchValue));
-            }
-            else
-            {
-                List<Item> allSearchedItems = items.Where(item => item.FormattedTegs.Contains(searchValue)).ToList();
-                return View(allSearchedItems);
-            }
         }
 
         public async Task<IActionResult> UserSettings()
         {
-            ViewBag.Language = GetCulture();
+            ViewBag.Language = CultureHandler.GetCulture();
             await SetViewBag();
             return View();
         }
 
         [NonAction]
-        public List<Item> Search(string searchValue)
-        {
-            List<Item> items = db.Items.ToList();
-            searchValue = "%" + searchValue + "%";
-
-            Task<List<int>>[] tasks = new Task<List<int>>[5]
-            {
-                new Task<List<int>>(() =>
-                {
-                return items.Where(x => EF.Functions.Like(x.Name, searchValue)).Select(item => item.Id).ToList();
-                }),
-                new Task<List<int>>(() =>
-                {
-                return items.Where(x => EF.Functions.Like(x.Tegs, searchValue)).Select(item => item.Id).ToList();
-                }),
-                new Task<List<int>>(() =>
-                {
-                    return items.Where(x => EF.Functions.Like(x.Values, searchValue)).Select(item => item.Id).ToList();
-                }),
-
-                new Task<List<int>>(() =>
-                {
-                    return items.Where(x => EF.Functions.Like(x.Collection.Description, searchValue)).Select(item => item.Id).ToList();
-                }),
-
-                new Task<List<int>>(() =>
-                {
-                    return db.Comments.Where(x => EF.Functions.Like(x.Text, searchValue)).Select(comment => comment.ItemId).ToList();
-                })
-            };
-
-            foreach (var t in tasks)
-            {
-                t.Start();
-            }
-
-
-            Task.WaitAll(tasks);
-
-            List<int> allSearchedItemsId = tasks[0].Result.
-                 Union(tasks[1].Result.
-                 Union(tasks[2].Result.
-                 Union(tasks[3].Result.
-                 Union(tasks[4].Result)))).ToList();
-
-            return items.Where(item => allSearchedItemsId.Contains(item.Id)).ToList();
-        }
-
-        [NonAction]
         public async Task<User> GetAutorizeUser()
         {
-            string emailAutorizeUser = User.Identity.Name;
-            return await db.Users.FirstOrDefaultAsync(u => u.Email == emailAutorizeUser);
-        }
-
-        [NonAction]
-        public string GetCulture(string code = "")
-        {
-            if (!String.IsNullOrEmpty(code))
-            {
-                CultureInfo.CurrentCulture = new CultureInfo(code);
-                CultureInfo.CurrentUICulture = new CultureInfo(code);
-            }
-            return CultureInfo.CurrentCulture.Name;
+            return await Database.db.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
         }
 
         [NonAction]
         public async Task<bool> SetViewBag()
         {
             ViewBag.AutorizeUser = await GetAutorizeUser();
-            string value = HttpContext.Request.Cookies["Theme"];
-            
-            ViewBag.Bg = "dark";
-            ViewBag.Text = "light";
-            if (value != "dark")
-            {
-                ViewBag.Bg = "light";
-                ViewBag.Text = "dark";
-            }
+            ViewBag.Bg = HttpContext.Request.Cookies["Theme"] == null ? "dark" : HttpContext.Request.Cookies["Theme"];
+            ViewBag.Text = ViewBag.Bg == "dark" ? "light" : "dark";
             return true;
         }
-
-        
     }
 }

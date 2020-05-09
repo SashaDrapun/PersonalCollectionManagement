@@ -52,7 +52,7 @@ function createField(node,nameField, typeField,fullEdit) {
                                                 placeholder="${document.querySelector('#FieldName').textContent}">
                                     </div>
                                     <div class="col-4">
-                                        <select name="typeField" ${fullEdit == false ? 'disabled' : ''}>
+                                        <select name="typeField">
                                             <option ${typeField === 'Числовой' ? 'selected' : ''}>${document.querySelector('#Numerical').textContent}</option>
                                             <option ${typeField === 'Строковый' ? 'selected' : ''}>${document.querySelector('#String').textContent}</option>
                                             <option ${typeField === 'Текстовый' ? 'selected' : ''}>${document.querySelector('#Text').textContent}</option>

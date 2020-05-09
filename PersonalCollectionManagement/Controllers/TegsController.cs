@@ -24,15 +24,7 @@ namespace PersonalCollectionManagement.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> tegs = new List<string>();
-
-                foreach(var item in db.Items)
-                {
-                    foreach (var teg in item.FormattedTegs)
-                    {
-                        tegs.Add(teg);
-                    }
-                }
+                List<string> tegs = db.Tags.Select(x=>x.Value).ToList();
 
                 var sortedTegs = tegs.Where(x => x.StartsWith(term)).Distinct().ToList();
                 return Ok(sortedTegs);

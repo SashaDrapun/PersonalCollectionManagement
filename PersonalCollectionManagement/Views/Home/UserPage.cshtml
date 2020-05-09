@@ -73,7 +73,7 @@ else
                     <td>
                         <button class="btn btn-danger editCollection"
                                 collectionId="@collection.Id"
-                                collectionFields="@collection.Fields"
+                                collectionFields="@collection.FormattedFields"
                                 collectionName="@collection.Name"
                                 collectionDescription="@collection.Description"
                                 data-toggle="modal" data-target="#editCollection">
@@ -113,7 +113,7 @@ else
             <div class="modal-body">
                 <div class="container-fluid">
                     <form name="loginForm" method="post" enctype="multipart/form-data">
-                        <input type="text" name="nicknameUser" class="d-none" value="@ViewBag.OwnerCollections.Nickname">
+                        <input type="text" name="idUser" class="d-none" value="@ViewBag.OwnerCollections.Id">
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["CollectionName"]</label>
                             <input type="text" name="nameCollection" class="form-control" id="nameCollection"
@@ -131,7 +131,7 @@ else
                                    accept="image/*"/>
                         </div>
                         <button class="btn btn-primary m-2 createField">@Localizer["AddField"]</button>
-                        <button asp-controller="Home" asp-action="CreateCollection"
+                        <button asp-controller="Collection" asp-action="CreateCollection"
                                 class="btn btn-primary m-2">
                             @Localizer["Save"]
                         </button>
@@ -145,7 +145,7 @@ else
 <div class='modal fade' id='deleteCollection' tabindex="-1" role="dialog"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
                 <h5 class="modal-title text-danger">@Localizer["DeleteCollection"]</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
@@ -157,7 +157,7 @@ else
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Cancel"]</button>
-                <form asp-controller="Home" asp-action="DeleteCollection" method="post">
+                <form asp-controller="Collection" asp-action="DeleteCollection" method="post">
                     <input name="idCollection" id="idCollection" class="d-none">
                     <button type="submit" class="btn btn-primary">@Localizer["Delete"]</button>
                 </form>
@@ -169,18 +169,18 @@ else
 <div class='modal fade' id='editCollection' tabindex="-1" role="dialog"
      aria-labelledby="editCollection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content @ViewBag.Text bg-@ViewBag.Bg">
+        <div class="modal-content text-@ViewBag.Text bg-@ViewBag.Bg">
             <div class="modal-header ">
                 <h5 class="modal-title " id="ModalLabel">@Localizer["EditCollection"]</h5>
                 <button class="close autorization" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Home" asp-action="EditCollection" method="post">
+            <form asp-controller="Collection" asp-action="EditCollection" method="post">
                 <div class="modal-body">
                     <div class="container-fluid">
-
                         <input type="text" name="idCollection" id="idCollectionEdit" class="d-none">
+                        <input type="text" name="IdUser" class="d-none" value="@ViewBag.OwnerCollections.Id">
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["CollectionName"]</label>
                             <input type="text" name="nameCollection" class="form-control" id="nameCollectionEdit"

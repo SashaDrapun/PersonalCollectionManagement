@@ -241,9 +241,7 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Collection.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Collections.cshtml.g.cs
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Item.cshtml.g.cs
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Items.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\UserPage.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Users.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\UserSettings.cshtml.g.cs
@@ -267,3 +265,5 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\credentials.json
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Search\Items.cshtml.g.cs
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs

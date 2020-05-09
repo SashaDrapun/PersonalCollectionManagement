@@ -14,6 +14,7 @@ namespace PersonalCollectionManagement.ViewModels
         public string Description { get; set; }
         public List<string> NameField { get; set; }
         public List<string> TypeField { get; set; }
-        public string NicknameUser { get; set; }
+        public string IdUser { get; set; }
+        public IFormFile UploadedFile { get; set; }
     }
 }

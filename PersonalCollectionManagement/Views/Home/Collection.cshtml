@@ -2,11 +2,11 @@
 @inject IViewLocalizer Localizer
 @{
     @model List<PersonalCollectionManagement.Models.Item>
-    ViewData["Title"] = Localizer["Collection"].Value + " " + Model[0].Collection.Name;
+    ViewData["Title"] = Localizer["Collection"].Value + " " + ViewBag.Collection.Name;
     ViewBag.FullAccess = false;
     @if (ViewBag.AutorizeUser != null)
     {
-        if ((ViewBag.AutorizeUser.Nickname == ViewBag.OwnerCollection.Nickname) || ViewBag.AutorizeUser.IsAdmin)
+        if ((ViewBag.AutorizeUser.Nickname == ViewBag.Collection.OwnerCollection.Nickname) || ViewBag.AutorizeUser.IsAdmin)
         {
             ViewBag.FullAccess = true;
         }
@@ -19,7 +19,7 @@
 
 <div class="text-@ViewBag.Text m-2">
     <h5>@Localizer["CollectionDescription"]</h5>
-    @Model[0].Collection.MarkdownDescription
+    @ViewBag.Collection.MarkdownDescription
 </div>
 
 @if (Model.Count == 1 && Model[0].Id == 0)
@@ -34,9 +34,10 @@ else
             <tr>
                 <th scope="col">@Localizer["ItemName"]</th>
                 <th scope="col">#@Localizer["Tegs"]</th>
-                @for (int i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+
+                @foreach (var Field in ViewBag.Collection.Fields)
                 {
-                    <th scope="col">@Model[0].Collection.FormattedFields[i].Name</th>
+                    <th scope="col">@Field.Name</th>
                 }
 
                 @if (ViewBag.FullAccess)
@@ -53,11 +54,17 @@ else
             {
                 <tr class="table-data">
                     <td>@item.Name</td>
-                    <td>@item.Tegs</td>
 
-                    @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                    <td>
+                        @foreach(var tag in item.Tags)
+                        {
+                            <a>#@tag</a>
+                        }
+                    </td>
+
+                    @for (var i = 0; i < ViewBag.Collection.Fields.Count; i++)
                     {
-                        var field = Model[0].Collection.FormattedFields[i];
+                        var field = ViewBag.Collection.Fields[i];
 
                         if (field.Type == "Текстовый")
                         {
@@ -66,7 +73,7 @@ else
 
                         if (field.Type == "Логический")
                         {
-                            @if (@item.FormattedValues[i] == "on")
+                            @if (item.Values[i] == "on")
                             {
                                 <td><input type="checkbox" disabled checked></td>
                             }
@@ -78,9 +85,10 @@ else
 
                         if (field.Type != "Текстовый" && field.Type != "Логический")
                         {
-                            <td>@item.FormattedValues[i]</td>
+                            <td>@item.Values[i]</td>
                         }
                     }
+
                     @if (ViewBag.FullAccess)
                     {
                         <td>
@@ -88,7 +96,7 @@ else
                                     idItem="@item.Id"
                                     valuesItem="@item.Values"
                                     nameItem="@item.Name"
-                                    tegsItem="@item.Tegs"
+                                    tegsItem="@(string.Join("",item.Tags.ToArray()))"
                                     data-toggle="modal" data-target="#editItem">
                                 @Localizer["Edit"]
                             </button>
@@ -126,7 +134,7 @@ else
             <div class="modal-body">
                 <div class="container-fluid">
                     <form name="loginForm" method="post">
-                        <input name="idCollection" value="@Model[0].Collection.Id" class="d-none">
+                        <input name="idCollection" value="@ViewBag.Collection.Id" class="d-none">
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["ItemName"]</label>
                             <input type="text" name="itemName" class="form-control" placeholder="@Localizer["ItemName"]">
@@ -136,14 +144,14 @@ else
                         <p>@Localizer["Add2"] #</p>
                         <input type="text" class="form-control" id="oneTag" placeholder="@Localizer["Enter"] #">
                         <button id="addTeg" class="btn btn-primary mt-2">@Localizer["Add2"] #</button>
-                        @if (Model[0].Collection.FormattedFields.Count != 0)
+                        @if (ViewBag.Collection.Fields.Count != 0)
                         {
                             <p>@Localizer["FillInTheFields"]</p>
                         }
 
-                        @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                        @for(var i = 0; i <ViewBag.Collection.Fields.Count; i++)
                         {
-                            var field = Model[0].Collection.FormattedFields[i];
+                            var field = ViewBag.Collection.Fields[i];
 
                             <label>@field.Name</label>
                             <div class="form-group">
@@ -180,7 +188,7 @@ else
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Cancel"]</button>
-                            <button asp-controller="Collection" asp-action="CreateItem"
+                            <button asp-controller="Item" asp-action="CreateItem"
                                     class="btn btn-primary m-2">
                                 @Localizer["Save"]
                             </button>
@@ -208,7 +216,7 @@ else
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Cancel"]</button>
-                <form asp-controller="Collection" asp-action="DeleteItem" method="post">
+                <form asp-controller="Item" asp-action="DeleteItem" method="post">
                     <input name="idItem" id="idItemDelete" class="d-none">
                     <button type="submit" class="btn btn-primary">@Localizer["Delete"]</button>
                 </form>
@@ -229,8 +237,8 @@ else
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form asp-controller="Collection" asp-action="EditItem" method="post">
-                        <input name="idCollection" value="@Model[0].Collection.Id" class="d-none">
+                    <form asp-controller="Item" asp-action="EditItem" method="post">
+                        <input name="idCollection" value="@ViewBag.Collection.Id" class="d-none">
                         <div class="form-group">
                             <label for="nameCollection">@Localizer["ItemName"]</label>
                             <input type="text" name="itemName" id="itemName" class="form-control"
@@ -243,9 +251,9 @@ else
                         <div>
                             <button id="addTegEdit" class="btn btn-primary mt-2 mb-2">@Localizer["Add2"] #</button>
                         </div>
-                        @for (var i = 0; i < Model[0].Collection.FormattedFields.Count; i++)
+                        @for (var i = 0; i < ViewBag.Collection.Fields.Count; i++)
                         {
-                            var field = Model[0].Collection.FormattedFields[i];
+                            var field = ViewBag.Collection.Fields[i];
 
                             <label>@field.Name</label>
                             <div class="form-group inputContainer">

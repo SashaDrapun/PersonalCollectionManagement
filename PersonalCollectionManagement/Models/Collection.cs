@@ -10,11 +10,11 @@ namespace PersonalCollectionManagement.Models
 {
     public class Collection
     {
-        public Collection(string name, string description)
+        public Collection(string name, string description, string image)
         {
             Name = name;
             Description = description;
-            Image = "Collection/Comment.png/";
+            Image = image;
         }
 
         [Key]
@@ -27,10 +27,11 @@ namespace PersonalCollectionManagement.Models
 
         public string Image { get; set; }
 
-        public string Fields { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
 
         [NotMapped]
-        public HtmlString MarkdownDescription 
+        public HtmlString MarkdownDescription
         {
             get
             {
@@ -42,44 +43,27 @@ namespace PersonalCollectionManagement.Models
         public int CountItems { get; set; }
 
         [NotMapped]
+        public List<Field> Fields{ get; set; }
 
-        public List<Field> FormattedFields
-        {
-            get
+        [NotMapped]
+        public User OwnerCollection { get; set; }
+
+        [NotMapped]
+        public string FormattedFields { 
+            get 
             {
-                List<Field> result = new List<Field>();
-
-                if(!string.IsNullOrEmpty(Fields))
+                string result = "";
+                for (int i = 0; i < Fields.Count; i++)
                 {
-                    string[] field = Fields.Split(new char[] { ';' });
+                    result += Fields[i].Name + "," + Fields[i].Type;
 
-                    for (int i = 0; i < field.Length; i++)
+                    if(i != Fields.Count - 1)
                     {
-                        string[] partsOfField = field[i].Split(new char[] { ',' });
-
-                        result.Add(new Field(partsOfField[0], partsOfField[1]));
+                        result += ";";
                     }
                 }
-
                 return result;
-            }
-            set
-            {
-                string fields = "";
-                for (int i = 0; i < value.Count; i++)
-                {
-                    fields += value[i].Name + "," + value[i].Type;
-                    if(i != value.Count - 1)
-                    {
-                        fields += ";";
-                    }
-                }
-                Fields = fields;
-            }
+            }  
         }
-
-        public string UserId { get; set; }
-
-        public User User { get; set; }
     }
 }

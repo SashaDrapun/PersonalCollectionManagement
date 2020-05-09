@@ -12,9 +12,9 @@
     <thead>
         <tr>
             <th scope="col">@Localizer["ItemName"]</th>
-            @foreach (var item in Model.Collection.FormattedFields)
+            @foreach (var field in ViewBag.Collection.Fields)
             {
-                <th scope="col">@item.Name</th>
+                <th scope="col">@field.Name</th>
             }
 
             <th scope="col">@Localizer["Likes"]</th>
@@ -25,9 +25,9 @@
         <tr>
             <th scope="row">@Model.Name</th>
 
-            @for (var i = 0; i < Model.Collection.FormattedFields.Count; i++)
+            @for (var i = 0; i <  ViewBag.Collection.Fields.Count; i++)
             {
-                var field = Model.Collection.FormattedFields[i];
+                var field =  ViewBag.Collection.Fields[i];
 
                 @if (field.Type == "Текстовый")
                 {
@@ -36,7 +36,7 @@
 
                 @if (field.Type == "Логический")
                 {
-                    @if (Model.FormattedValues[i] == "on")
+                    @if (Model.Values[i] == "on")
                     {
                         <th scope="row"><input type="checkbox" disabled checked></th>
                     }
@@ -48,7 +48,7 @@
 
                 @if (field.Type != "Текстовый" && field.Type != "Логический")
                 {
-                    <th scope="row">@Model.FormattedValues[i]</th>
+                    <th scope="row">@Model.Values[i]</th>
                 }
             }
 

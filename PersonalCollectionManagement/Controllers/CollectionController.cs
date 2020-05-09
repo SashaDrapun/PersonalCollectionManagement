@@ -1,67 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionManagement.Models;
 using PersonalCollectionManagement.ViewModels;
+using PersonalCollectionManagement.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using PersonalCollectionManagement.Services.CollectionServices;
 
 namespace PersonalCollectionManagement.Controllers
 {
     public class CollectionController : Controller
     {
-        ApplicationContext db;
-
         public CollectionController(ApplicationContext applicationContext)
         {
-            db = applicationContext;
-        }
-
-        #region Item
-        [HttpPost]
-        public async Task<IActionResult> CreateItem(ItemModel itemModel)
-        {
-            Item item = new Item
-            {
-                CollectionId = itemModel.IdCollection,
-                Name = itemModel.ItemName,
-                FormattedValues = itemModel.ItemValue,
-                Tegs = itemModel.Tegs
-            };
-
-            db.Items.Add(item);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Collection", "Home", new { idCollection = item.CollectionId});
-        }
-
-        public async Task<IActionResult> DeleteItem(int idItem)
-        {
-            Item item = await db.Items.FirstOrDefaultAsync(item => item.Id == idItem);
-
-            int collectionId = item.CollectionId;
-            db.Items.Remove(item);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Collection", "Home", new { idCollection = collectionId});
+            Database.SetDB(applicationContext);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditItem(ItemModel itemModel)
+        public async Task<IActionResult> CreateCollection(CollectionModel collectionModel)
         {
-            Item item = new Item
-            {
-                Id = itemModel.IdItem,
-                CollectionId = itemModel.IdCollection,
-                Name = itemModel.ItemName,
-                Tegs = itemModel.Tegs,
-                FormattedValues = itemModel.ItemValue
-            };
-
-            db.Items.Update(item);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Collection", "Home", new { idCollection = item.CollectionId });
+            await CollectionAdder.AddCollection(collectionModel);
+            return RedirectToAction("UserPage", "Home", new { idUser = collectionModel.IdUser});
         }
 
-        #endregion
+        [HttpPost]
+        public async Task<IActionResult> DeleteCollection(int idCollection)
+        {
+            User ownerUser = UsersHandler.GetUser(idCollection);
+            await CollectionDeleter.DeleteCollectionAsync(idCollection);
+            return RedirectToAction("UserPage", "Home", new { idUser = ownerUser.Id });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditCollection(CollectionModel collectionModel)
+        {
+            await CollectionUpdater.UpdateCollection(collectionModel);
+            return RedirectToAction("UserPage", "Home", new { idUser = collectionModel.IdUser });
+        }
     }
 }
