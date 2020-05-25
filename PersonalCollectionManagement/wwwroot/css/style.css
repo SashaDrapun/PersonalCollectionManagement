@@ -8,7 +8,12 @@ textarea{
     resize: none;
 }
 
-img{
+img {
+    height: 100px;
+    width: 100px;
+}
+
+.likeAndComment{
     height:30px;
     width:30px;
 }

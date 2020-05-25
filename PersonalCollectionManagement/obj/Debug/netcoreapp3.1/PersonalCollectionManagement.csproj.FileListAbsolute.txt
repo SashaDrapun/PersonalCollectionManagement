@@ -217,8 +217,6 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Index.ru.resources
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Item.en.resources
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Item.ru.resources
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Items.en.resources
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Items.ru.resources
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.UserPage.en.resources
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.UserPage.ru.resources
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Home.Users.en.resources
@@ -256,14 +254,10 @@ C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalColl
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\staticwebassets\PersonalCollectionManagement.StaticWebAssets.xml
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.dll
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.pdb
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.dll
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.Auth.PlatformServices.dll
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.Auth.dll
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.Core.dll
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.Drive.v3.dll
-C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\Google.Apis.Drive.v2.dll
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\bin\Debug\netcoreapp3.1\credentials.json
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Search\Items.cshtml.g.cs
 C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Search.Items.en.resources
+C:\Users\alexander\Desktop\Itranzition\PersonalCollectionManagement\PersonalCollectionManagement\obj\Debug\netcoreapp3.1\PersonalCollectionManagement.Resources.Views.Search.Items.ru.resources

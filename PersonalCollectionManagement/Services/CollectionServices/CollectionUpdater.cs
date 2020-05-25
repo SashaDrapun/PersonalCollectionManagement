@@ -14,7 +14,7 @@ namespace PersonalCollectionManagement.Services.CollectionServices
         public static async Task UpdateCollection(CollectionModel collectionModel)
         {
             Collection oldCollection = CollectionSearcher.GetCollection(collectionModel.IdCollection);
-            User ownerUser = UsersHandler.GetUser(collectionModel.IdUser);
+            User ownerUser = UsersSearcher.GetUser(collectionModel.IdUser);
 
             oldCollection.Name = collectionModel.NameCollection;
             oldCollection.Description = collectionModel.Description;

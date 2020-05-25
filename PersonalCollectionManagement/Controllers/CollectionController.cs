@@ -32,7 +32,7 @@ namespace PersonalCollectionManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteCollection(int idCollection)
         {
-            User ownerUser = UsersHandler.GetUser(idCollection);
+            User ownerUser = UsersSearcher.GetUser(idCollection);
             await CollectionDeleter.DeleteCollectionAsync(idCollection);
             return RedirectToAction("UserPage", "Home", new { idUser = ownerUser.Id });
         }

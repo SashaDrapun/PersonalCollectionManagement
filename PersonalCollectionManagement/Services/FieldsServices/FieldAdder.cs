@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PersonalCollectionManagement.Services.FieldsServices
 {
-    public class FieldAdder
+    public static class FieldAdder
     {
         public static async Task AddCollectionFields(List<string> nameField, List<string> typeField, int idCollection)
         {

@@ -10,13 +10,7 @@ namespace PersonalCollectionManagement.Services.FieldsServices
     {
         public static async Task DeleteCollectionFields(int idCollection)
         {
-            List<Field> fields = FieldsSearcher.GetFields(idCollection);
-
-            for (int i = 0; i < fields.Count; i++)
-            {
-                Database.db.Fields.Remove(fields[i]);
-            }
-
+            Database.db.Fields.RemoveRange(FieldsSearcher.GetFields(idCollection));
             await Database.db.SaveChangesAsync();
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PersonalCollectionManagement.Controllers
 {
-    public static class TagsHandler
+    public static class TagsSearcher
     {
         public static List<Tag> GetTags(string searchValue)
         {
@@ -16,6 +16,11 @@ namespace PersonalCollectionManagement.Controllers
         public static List<string> GetTagsValues()
         {
             return Database.db.Tags.Select(x => x.Value).Distinct().ToList();
+        }
+
+        public static List<Tag> GetItemTags(int itemId)
+        {
+            return Database.db.Tags.Where(tag => tag.IdItem == itemId).ToList();
         }
     }
 }

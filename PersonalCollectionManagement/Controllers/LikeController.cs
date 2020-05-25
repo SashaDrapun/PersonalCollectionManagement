@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionManagement.Models;
+using PersonalCollectionManagement.Services;
+using PersonalCollectionManagement.Services.LikeServices;
 using PersonalCollectionManagement.ViewModels;
 
 namespace PersonalCollectionManagement.Controllers
@@ -12,36 +14,23 @@ namespace PersonalCollectionManagement.Controllers
     [Route("api/[controller]")]
     public class LikeController : ControllerBase
     {
-        ApplicationContext db;
-
-        public LikeController(ApplicationContext context)
+        public LikeController(ApplicationContext applicationContext)
         {
-            db = context;
+            Database.SetDB(applicationContext);
         }
 
         [HttpPost]
         public async Task<ActionResult<Like>> Post([FromBody]LikeModel likeModel)
         {
-            User user = await db.Users.FirstOrDefaultAsync(x => x.Nickname == likeModel.NicknameUser);
-
-            Like like = new Like
-            {
-                UserId = user.Id,
-                ItemId = likeModel.IdItem
-            };
-
-            db.Likes.Add(like);
-            await db.SaveChangesAsync();
+            await LikeAdder.AddLikeAsync(likeModel);
             return Ok();
         }
 
-        [HttpDelete("{userNickname}")]
-        public async Task<ActionResult> Delete(string userNickname)
+        [HttpDelete("{itemId}")]
+        public async Task<ActionResult> Delete(int itemId)
         {
-            User user = await db.Users.FirstOrDefaultAsync(x => x.Nickname == userNickname);
-            Like like = db.Likes.FirstOrDefault(x => x.UserId == user.Id);
-            db.Likes.Remove(like);
-            await db.SaveChangesAsync();
+            User autorizeUser = await Database.db.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            await LikeDeleter.DeleteLike(itemId, autorizeUser);
             return Ok();
         }
     }

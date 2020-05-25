@@ -15,7 +15,7 @@ namespace PersonalCollectionManagement.Services.CollectionServices
         {
             string path = await AppInviroment.CopyImage(CopyImageSettings.Collections, collectionModel.UploadedFile);
 
-            User ownerCollection = UsersHandler.GetUser(collectionModel.IdUser);
+            User ownerCollection = UsersSearcher.GetUser(collectionModel.IdUser);
 
             Collection collection = new Collection(collectionModel.NameCollection, collectionModel.Description, path)
             {

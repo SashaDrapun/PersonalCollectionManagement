@@ -17,9 +17,15 @@
 <link rel="stylesheet" href="~/css/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="~/css/jquery-ui.theme.css">
 
+
+    <div class="col text-@ViewBag.Text bg-@ViewBag.Bg">
+        <h5>@Localizer["CollectionDescription"]</h5>
+        @ViewBag.Collection.MarkdownDescription
+
+        <img src="@ViewBag.Collection.Image">
+</div>
 <div class="text-@ViewBag.Text m-2">
-    <h5>@Localizer["CollectionDescription"]</h5>
-    @ViewBag.Collection.MarkdownDescription
+    
 </div>
 
 @if (Model.Count == 1 && Model[0].Id == 0)
@@ -28,6 +34,7 @@
 }
 else
 {
+    
     <h5 class="text-info m-2">@Localizer["ListOfCollectionItems"]</h5>
     <table class="table table-responsive-sm table-bordered table-hover table-@ViewBag.Bg" id="filter-table">
         <thead>
@@ -149,43 +156,40 @@ else
                             <p>@Localizer["FillInTheFields"]</p>
                         }
 
-                        @for(var i = 0; i <ViewBag.Collection.Fields.Count; i++)
+                        @for (var i = 0; i < ViewBag.Collection.Fields.Count; i++)
                         {
                             var field = ViewBag.Collection.Fields[i];
 
                             <label>@field.Name</label>
                             <div class="form-group">
 
-                                @if (field.Type == "Числовой")
+                                @if (field.Type == "Числовой" || field.Type == "Numerical")
                                 {
                                     <input type="number" name="itemValue">
                                 }
 
-                                @if (field.Type == "Строковый")
+                                @if (field.Type == "Строковый" || field.Type == "String")
                                 {
                                     <input type="text" name="itemValue">
                                 }
 
-                                @if (field.Type == "Текстовый")
+                                @if (field.Type == "Текстовый" || field.Type == "Text")
                                 {
                                     <textarea name="itemValue"></textarea>
                                 }
 
-                                @if (field.Type == "Дата")
+                                @if (field.Type == "Дата" || field.Type == "Date")
                                 {
                                     <input type="date" name="itemValue">
                                 }
 
-                                @if (field.Type == "Логический")
+                                @if (field.Type == "Логический" || field.Type == "Logical")
                                 {
                                     <input class="d-none" type="text" name="itemValue" value="off">
                                     <input type="checkbox">
                                 }
                             </div>
                         }
-                        <div class="form-group">
-                            <input type="file" name="uploadedFile" />
-                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Cancel"]</button>
                             <button asp-controller="Item" asp-action="CreateItem"
@@ -258,27 +262,27 @@ else
                             <label>@field.Name</label>
                             <div class="form-group inputContainer">
 
-                                @if (field.Type == "Числовой")
+                                @if (field.Type == "Числовой" || field.Type == "Numerical")
                                 {
                                     <input type="number" name="itemValue">
                                 }
 
-                                @if (field.Type == "Строковый")
+                                @if (field.Type == "Строковый" || field.Type == "String")
                                 {
                                     <input type="text" name="itemValue">
                                 }
 
-                                @if (field.Type == "Текстовый")
+                                @if (field.Type == "Текстовый" || field.Type == "Text")
                                 {
                                     <textarea name="itemValue"></textarea>
                                 }
 
-                                @if (field.Type == "Дата")
+                                @if (field.Type == "Дата" || field.Type == "Date")
                                 {
                                     <input type="date" name="itemValue">
                                 }
 
-                                @if (field.Type == "Логический")
+                                @if (field.Type == "Логический" || field.Type == "Logical")
                                 {
                                     <input class="d-none" type="text" name="itemValue" value="off">
                                     <input type="checkbox">

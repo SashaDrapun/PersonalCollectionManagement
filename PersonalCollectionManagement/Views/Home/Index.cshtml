@@ -99,6 +99,6 @@
 <div class="m-2">
     @foreach (var tag in ViewBag.AllTegs)
     {
-        <a class="text-@ViewBag.Text" asp-controller="Home" asp-action="Items" asp-route-searchValue="@tag">#@tag </a>
+        <a class="text-@ViewBag.Text" asp-controller="Search" asp-action="Items" asp-route-searchValue="@tag">#@tag </a>
     }
 </div>

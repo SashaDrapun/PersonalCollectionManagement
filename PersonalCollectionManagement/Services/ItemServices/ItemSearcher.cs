@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PersonalCollectionManagement.Controllers;
 using PersonalCollectionManagement.Models;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,38 @@ using System.Threading.Tasks;
 
 namespace PersonalCollectionManagement.Services
 {
-    public static class ItemHandler
+    public static class ItemSearcher
     {
+        private static Item SetItem(Item item)
+        {
+            ApplicationContext db = Database.db;
+            item.Values = new List<string>();
+            item.Values.AddRange(
+                   db.Values.
+                   Where(x => x.IdItem == item.Id).
+                   Select(x => x.Information).ToList());
+
+            item.Tags = new List<string>();
+            item.Tags.AddRange(
+                db.Tags.
+                Where(x => x.IdItem == item.Id).
+                 Select(x => x.Value).ToList());
+
+            item.Collection = CollectionSearcher.GetCollection(item.CollectionId);
+
+            return item;
+        }
+
+        private static List<Item> SetItems(List<Item> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                items[i] = SetItem(items[i]);
+            }
+
+            return items;
+        }
+
         public static Item GetItem(int idItem)
         {
             Item item = Database.db.Items.FirstOrDefault(x => x.Id == idItem);
@@ -45,34 +76,6 @@ namespace PersonalCollectionManagement.Services
             return SetItems(Database.db.Items.OrderByDescending(x => x.Id).Take(count).ToList());
         }
 
-        private static List<Item> SetItems(List<Item> items)
-        {
-            for (int i = 0; i < items.Count; i++)
-            {
-                items[i] = SetItem(items[i]);
-            }
-
-            return items;
-        }
-
-        private static Item SetItem(Item item)
-        {
-            ApplicationContext db = Database.db;
-            item.Values = new List<string>();
-            item.Values.AddRange(
-                   db.Values.
-                   Where(x => x.IdItem == item.Id).
-                   Select(x => x.Information).ToList());
-
-            item.Tags = new List<string>();
-            item.Tags.AddRange(
-                db.Tags.
-                Where(x => x.IdItem == item.Id).
-                 Select(x => x.Value).ToList());
-
-            item.Collection = db.Collections.FirstOrDefault(collection => collection.Id == item.CollectionId);
-
-            return item;
-        }
+       
     }
 }

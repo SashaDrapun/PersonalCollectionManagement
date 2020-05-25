@@ -81,8 +81,8 @@ namespace PersonalCollectionManagement
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "1063794657329915";
-                    options.AppSecret = "1d7f0f3abf0018dbec7422369bd37ac3";
+                    options.AppId = "690634851695548";
+                    options.AppSecret = "c5a2f57203afeb6138446a7bd853602b";
                 });
         }
 

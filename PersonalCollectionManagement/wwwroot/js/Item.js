@@ -40,8 +40,9 @@ async function AddComment(nickname, idItem, text) {
     }
 }
 
-async function DeleteLike(nickname) {
-    const response = await fetch("/api/like/" + nickname, {
+async function DeleteLike() {
+    const itemId = parseInt(document.querySelector('#idItem').textContent);
+    const response = await fetch("/api/like/" + itemId, {
         method: "DELETE",
         headers: { "Accept": "application/json" }
     });
@@ -49,7 +50,6 @@ async function DeleteLike(nickname) {
         containerCountLikes.textContent = --countLikes;
         document.querySelector('.like').src = '/img/Like.png';
         document.querySelector('#isUserLike').textContent = 'False';
-        const itemId = parseInt(document.querySelector('#idItem').textContent);
         hubConnection.invoke("SendLike", itemId, countLikes);
     }
 }
@@ -60,7 +60,7 @@ document.querySelector('.like').addEventListener('click', () => {
     if (nicknameAutorizeUser != undefined) {
         let isUserLike = document.querySelector('#isUserLike').textContent === 'False' ? false : true;
         if (isUserLike) {
-            DeleteLike(nicknameAutorizeUser);
+            DeleteLike();
         }
         else {
             const idItem = document.querySelector('#idItem').textContent;

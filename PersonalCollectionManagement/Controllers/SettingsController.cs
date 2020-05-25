@@ -12,11 +12,9 @@ namespace PersonalCollectionManagement.Controllers
 {
     public class SettingsController : Controller
     {
-        ApplicationContext db;
-
         public SettingsController(ApplicationContext applicationContext)
         {
-            db = applicationContext;
+            Database.SetDB(applicationContext);
         }
 
         public IActionResult ChangeLanguage(string language)

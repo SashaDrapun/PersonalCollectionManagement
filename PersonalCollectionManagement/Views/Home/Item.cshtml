@@ -55,17 +55,17 @@
             <th scope="row">
                 @if (ViewBag.IsUserLike)
                 {
-                    <img class="mr-2 like" src="~/img/LikePressed.png">
+                    <img class="mr-2 like likeAndComment" src="~/img/LikePressed.png">
                 }
                 else
                 {
-                    <img class="mr-2 like" src="~/img/Like.png">
+                    <img class="mr-2 like likeAndComment" src="~/img/Like.png">
                 }
                 <span id="countLikes">@ViewBag.CountLikes</span>
             </th>
 
             <th scope="row">
-                <img class="mr-2" src="~/img/Comment.png">
+                <img class="mr-2 likeAndComment" src="~/img/Comment.png">
                 <span id="countComments">@ViewBag.Comments.Count</span>
             </th>
         </tr>

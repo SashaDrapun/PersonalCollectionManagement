@@ -4,7 +4,7 @@ using PersonalCollectionManagement.Models;
 
 namespace PersonalCollectionManagement.Services
 {
-    public static class UsersHandler
+    public static class UsersSearcher
     {
        public static User GetUser(string idUser)
        {
@@ -17,5 +17,15 @@ namespace PersonalCollectionManagement.Services
 
             return GetUser(collection.UserId);
        }
+
+       public static User GetUserByNickname(string nickname)
+       {
+            return Database.db.Users.FirstOrDefault(user => user.Nickname == nickname);
+       }
+
+        public static User GetUserByEmail(string email)
+        {
+            return Database.db.Users.FirstOrDefault(user => user.Email == email);
+        }
     }
 }

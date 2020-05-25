@@ -11,16 +11,15 @@ namespace PersonalCollectionManagement.Controllers
 {
     public class SearchController : Controller
     {
-        private ApplicationContext db;
         public SearchController(ApplicationContext applicationContext)
         {
-            db = applicationContext;
+            Database.SetDB(applicationContext);
         }
 
         public async Task<IActionResult> Items(string act, string searchValue)
         {
             await SetViewBag();
-            List<Item> items = ItemHandler.GetAllItems();
+            List<Item> items = ItemSearcher.GetAllItems();
 
             if (act == "search")
             {
@@ -28,18 +27,18 @@ namespace PersonalCollectionManagement.Controllers
             }
             else
             {
-                List<Tag> searchedTags = TagsHandler.GetTags(searchValue);
+                List<Tag> searchedTags = TagsSearcher.GetTags(searchValue);
 
-                return View(ItemHandler.GetItemsByTags(searchedTags));
+                return View(ItemSearcher.GetItemsByTags(searchedTags));
             }
         }
 
         [NonAction]
         private List<Item> Search(string searchValue)
         {
-            List<Item> items = db.Items.ToList();
-            List<Tag> tags = db.Tags.ToList();
-            List<Value> values = db.Values.ToList();
+            List<Item> items = Database.db.Items.ToList();
+            List<Tag> tags = Database.db.Tags.ToList();
+            List<Value> values = Database.db.Values.ToList();
             searchValue = "%" + searchValue + "%";
 
             Task<List<int>>[] tasks = new Task<List<int>>[4]
@@ -59,7 +58,7 @@ namespace PersonalCollectionManagement.Controllers
 
                 new Task<List<int>>(() =>
                 {
-                    return db.Comments.Where(x => EF.Functions.Like(x.Text, searchValue)).Select(comment => comment.ItemId).ToList();
+                    return Database.db.Comments.Where(x => EF.Functions.Like(x.Text, searchValue)).Select(comment => comment.ItemId).ToList();
                 })
             };
 
@@ -81,7 +80,7 @@ namespace PersonalCollectionManagement.Controllers
         [NonAction]
         public async Task<User> GetAutorizeUser()
         {
-            return await db.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            return await Database.db.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
         }
 
         [NonAction]

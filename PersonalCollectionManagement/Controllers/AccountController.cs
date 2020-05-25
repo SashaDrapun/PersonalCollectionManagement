@@ -12,13 +12,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using PersonalCollectionManagement.Models;
+using PersonalCollectionManagement.Services;
+using PersonalCollectionManagement.Services.UserServices;
 using PersonalCollectionManagement.ViewModels;
 
 namespace PersonalCollectionManagement.Controllers
 {
     public class AccountController : Controller
     {
-        private ApplicationContext db;
         private SignInManager<User> signInManager;
         private UserManager<User> userManager;
         private readonly IStringLocalizer<AccountController> localizer;
@@ -26,7 +27,7 @@ namespace PersonalCollectionManagement.Controllers
         public AccountController(ApplicationContext applicationContext,SignInManager<User> signInManager,
             UserManager<User> userManager,IStringLocalizer<AccountController> localizer)
         {
-            db = applicationContext;
+            Database.SetDB(applicationContext);
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.localizer = localizer;
@@ -44,8 +45,9 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             SetViewBag();
-            User userFromDatabaseByEmail = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            User userFromDatabaseByNickname = await db.Users.FirstOrDefaultAsync(u => u.Nickname == model.Nickname);
+            User userFromDatabaseByEmail = UsersSearcher.GetUserByEmail(model.Email);
+            User userFromDatabaseByNickname = UsersSearcher.GetUserByNickname(model.Nickname);
+
             bool isAllValid = true;
 
             if (string.IsNullOrEmpty(model.Email))
@@ -96,7 +98,7 @@ namespace PersonalCollectionManagement.Controllers
                     DateRegistration = DateTime.Now,
                     DateLastLogin = DateTime.Now
                 };
-                if(db.Users.Count() == 0)
+                if(Database.db.Users.Count() == 0)
                 {
                     user.IsAdmin = true;
                 }
@@ -126,7 +128,7 @@ namespace PersonalCollectionManagement.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             SetViewBag();
-            User userFromDatabase = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            User userFromDatabase = UsersSearcher.GetUserByEmail(model.Email);
             bool isAllValid = true;
 
             if (string.IsNullOrEmpty(model.Password))
@@ -151,7 +153,7 @@ namespace PersonalCollectionManagement.Controllers
             {
                 userFromDatabase.DateLastLogin = DateTime.Now;
 
-                await db.SaveChangesAsync();
+                await UsersUpdater.UpdateUserAsync(userFromDatabase);
                 var result = await signInManager.PasswordSignInAsync(userFromDatabase.Email,model.Password,false, false);
                 if (result.Succeeded)
                 {

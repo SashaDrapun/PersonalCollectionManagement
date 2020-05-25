@@ -10,11 +10,9 @@ namespace PersonalCollectionManagement.Controllers
     [Route("api/tegs")]
     public class TegsController : Controller
     {
-        ApplicationContext db;
-
         public TegsController(ApplicationContext applicationContext)
         {
-            db = applicationContext;
+            Database.SetDB(applicationContext);
         }
 
         [Produces("application/json")]
@@ -24,9 +22,9 @@ namespace PersonalCollectionManagement.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> tegs = db.Tags.Select(x=>x.Value).ToList();
+                List<string> tags = TagsSearcher.GetTagsValues();
 
-                var sortedTegs = tegs.Where(x => x.StartsWith(term)).Distinct().ToList();
+                var sortedTegs = tags.Where(x => x.StartsWith(term)).Distinct().ToList();
                 return Ok(sortedTegs);
             }
             catch

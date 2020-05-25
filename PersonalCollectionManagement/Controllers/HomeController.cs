@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionManagement.Models;
 using PersonalCollectionManagement.Services;
+using PersonalCollectionManagement.Services.CommentServices;
+using PersonalCollectionManagement.Services.LikeServices;
 
 namespace PersonalCollectionManagement.Controllers
 {
@@ -22,11 +24,11 @@ namespace PersonalCollectionManagement.Controllers
         {
             await SetViewBag();
 
-            ViewBag.LastAddedItems = ItemHandler.GetLastAddedItems(5);
+            ViewBag.LastAddedItems = ItemSearcher.GetLastAddedItems(5);
 
             ViewBag.CollectionsWithMostOfItems = CollectionSearcher.GetCollectionsWithMostOfItems(5);
 
-            ViewBag.AllTegs = TagsHandler.GetTagsValues();
+            ViewBag.AllTegs = TagsSearcher.GetTagsValues();
 
             return View();
         }
@@ -35,7 +37,7 @@ namespace PersonalCollectionManagement.Controllers
         {
             await SetViewBag();
 
-            ViewBag.OwnerCollections = UsersHandler.GetUser(idUser);
+            ViewBag.OwnerCollections = UsersSearcher.GetUser(idUser);
 
             return View(CollectionSearcher.GetUserCollections(idUser));
         }
@@ -52,7 +54,7 @@ namespace PersonalCollectionManagement.Controllers
 
             ViewBag.Collection = CollectionSearcher.GetCollection(idCollection);
 
-            return View(ItemHandler.GetCollectionItems(idCollection));
+            return View(ItemSearcher.GetCollectionItems(idCollection));
         }
 
         public async Task<IActionResult> Users()
@@ -65,13 +67,13 @@ namespace PersonalCollectionManagement.Controllers
             await SetViewBag();
 
             User autorizeUser = await GetAutorizeUser();
-            Item item = ItemHandler.GetItem(id);
+            Item item = ItemSearcher.GetItem(id);
             ViewBag.Collection = CollectionSearcher.GetCollection(item.CollectionId);
-            ViewBag.Comments = CommentsHandler.GetComments(item.Id);
+            ViewBag.Comments = CommentSearcher.GetItemComments(item.Id);
 
-            List<Like> likes = LikesHandler.GetLikes(item.Id);
+            List<Like> likes = LikeSearcher.GetItemLikes(item.Id);
             ViewBag.CountLikes = likes.Count;
-            ViewBag.IsUserLike = LikesHandler.IsUserLike(autorizeUser, likes);
+            ViewBag.IsUserLike = LikeSearcher.IsUserLike(autorizeUser, likes);
 
             return View(item);
         }
